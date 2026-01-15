@@ -1,12 +1,11 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework";
-import { HttpTypes } from "@medusajs/framework/types";
 import { addToCartWorkflow } from "@medusajs/medusa/core-flows";
 import { ContainerRegistrationKeys } from "@medusajs/utils";
 import { StoreAddLineItemsBulkType } from "../../../validators";
 
 export async function POST(
   req: MedusaRequest<StoreAddLineItemsBulkType>,
-  res: MedusaResponse<HttpTypes.StoreCartResponse>
+  res: MedusaResponse
 ) {
   const { id } = req.params;
   const { line_items } = req.validatedBody;
@@ -17,15 +16,15 @@ export async function POST(
   } = await query.graph(
     {
       entity: "cart",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }
   );
 
   const workflowInput = {
+    cart_id: cart.id,
     items: line_items,
-    cart,
   };
 
   await addToCartWorkflow(req.scope).run({
@@ -37,7 +36,7 @@ export async function POST(
   } = await query.graph(
     {
       entity: "cart",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }

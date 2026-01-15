@@ -1,12 +1,13 @@
-import { fetchQuote, fetchQuotePreview } from "@lib/data/quotes"
+import { fetchQuote, fetchQuotePreview } from "@/lib/data/quotes"
 import { notFound } from "next/navigation"
 import QuoteDetails from "../../components/quote-details"
 
 type Props = {
-  params: { id: string; countryCode: string }
+  params: Promise<{ id: string; countryCode: string }>
 }
 
-export default async function QuoteDetailsPage({ params }: Props) {
+export default async function QuoteDetailsPage(props: Props) {
+  const params = await props.params
   const { quote } = await fetchQuote(params.id, {})
   const {
     quote: { order_preview: quotePreview },

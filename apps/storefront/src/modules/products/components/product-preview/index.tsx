@@ -1,8 +1,7 @@
-import { getProductsById } from "@lib/data/products"
-import { getProductPrice } from "@lib/util/get-product-price"
+import { getProductPrice } from "@/lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 import { Text, clx } from "@medusajs/ui"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import LocalizedClientLink from "@/modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
 import PreviewAddToCart from "./preview-add-to-cart"
 import PreviewPrice from "./price"
@@ -16,20 +15,15 @@ export default async function ProductPreview({
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
 }) {
-  const [pricedProduct] = await getProductsById({
-    ids: [product.id!],
-    regionId: region.id,
-  })
-
-  if (!pricedProduct) {
+  if (!product) {
     return null
   }
 
   const { cheapestPrice } = getProductPrice({
-    product: pricedProduct,
+    product,
   })
 
-  const inventoryQuantity = pricedProduct.variants?.reduce((acc, variant) => {
+  const inventoryQuantity = product.variants?.reduce((acc, variant) => {
     return acc + (variant?.inventory_quantity || 0)
   }, 0)
 
@@ -37,7 +31,7 @@ export default async function ProductPreview({
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div
         data-testid="product-wrapper"
-        className="flex flex-col gap-4 relative w-full overflow-hidden p-4 bg-white shadow-borders-base rounded-lg group-hover:shadow-[0_0_0_4px_rgba(0,0,0,0.1)] transition-shadow ease-in-out duration-150"
+        className="flex flex-col gap-4 relative aspect-[3/5] w-full overflow-hidden p-4 bg-white shadow-borders-base rounded-lg group-hover:shadow-[0_0_0_4px_rgba(0,0,0,0.1)] transition-shadow ease-in-out duration-150"
       >
         <div className="w-full h-full p-10">
           <Thumbnail
@@ -54,7 +48,6 @@ export default async function ProductPreview({
           </Text>
         </div>
         <div className="flex flex-col gap-0">
-          {/* @ts-expect-error (TODO: Fix this) */}
           {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
           <Text className="text-neutral-600 text-[0.6rem]">Excl. VAT</Text>
         </div>

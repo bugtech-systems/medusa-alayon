@@ -1,24 +1,31 @@
+import AddressSelect from "@/modules/checkout/components/address-select"
+import CountrySelect from "@/modules/checkout/components/country-select"
+import Input from "@/modules/common/components/input"
+import { B2BCart, B2BCustomer } from "@/types"
 import { HttpTypes } from "@medusajs/types"
 import { Container } from "@medusajs/ui"
-import Input from "@modules/common/components/input"
 import { mapKeys } from "lodash"
 import React, { useEffect, useMemo, useState } from "react"
-import { B2BCart, B2BCustomer } from "types/global"
-import AddressSelect from "../address-select"
-import CountrySelect from "../country-select"
 
 const ShippingAddressForm = ({
   customer,
   cart,
-  checked,
-  onChange,
 }: {
   customer: B2BCustomer | null
   cart: B2BCart | null
-  checked: boolean
-  onChange: () => void
 }) => {
-  const [formData, setFormData] = useState<Record<string, any>>({})
+  const [formData, setFormData] = useState<Record<string, any>>({
+    "shipping_address.first_name": "",
+    "shipping_address.last_name": "",
+    "shipping_address.address_1": "",
+    "shipping_address.company": cart?.company?.name || "",
+    "shipping_address.postal_code": "",
+    "shipping_address.city": "",
+    "shipping_address.country_code": "",
+    "shipping_address.province": "",
+    "shipping_address.phone": "",
+    email: "",
+  })
 
   const countriesInRegion = useMemo(
     () => cart?.region?.countries?.map((c) => c.iso_2),
@@ -41,30 +48,30 @@ const ShippingAddressForm = ({
     address &&
       setFormData((prevState: Record<string, any>) => ({
         ...prevState,
-        "shipping_address.first_name": address?.first_name || "",
-        "shipping_address.last_name": address?.last_name || "",
-        "shipping_address.address_1": address?.address_1 || "",
-        "shipping_address.company": address?.company || "",
-        "shipping_address.postal_code": address?.postal_code || "",
-        "shipping_address.city": address?.city || "",
-        "shipping_address.country_code": address?.country_code || "",
-        "shipping_address.province": address?.province || "",
-        "shipping_address.phone": address?.phone || "",
+        "shipping_address.first_name": address?.first_name?.toString() || "",
+        "shipping_address.last_name": address?.last_name?.toString() || "",
+        "shipping_address.address_1": address?.address_1?.toString() || "",
+        "shipping_address.company": address?.company?.toString() || "",
+        "shipping_address.postal_code": address?.postal_code?.toString() || "",
+        "shipping_address.city": address?.city?.toString() || "",
+        "shipping_address.country_code":
+          address?.country_code?.toString() || "",
+        "shipping_address.province": address?.province?.toString() || "",
+        "shipping_address.phone": address?.phone?.toString() || "",
       }))
 
     email &&
       setFormData((prevState: Record<string, any>) => ({
         ...prevState,
-        email: email,
+        email: email.toString() || "",
       }))
   }
 
   useEffect(() => {
-    // Ensure cart is not null and has a shipping_address before setting form data
     if (cart && cart.shipping_address) {
       setFormAddress(cart?.shipping_address)
     }
-  }, [cart]) // Add cart as a dependency
+  }, [cart])
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -115,10 +122,18 @@ const ShippingAddressForm = ({
           data-testid="shipping-last-name-input"
         />
         <Input
+          label="Phone"
+          name="shipping_address.phone"
+          autoComplete="tel"
+          value={formData["shipping_address.phone"]}
+          onChange={handleChange}
+          required
+          data-testid="shipping-phone-input"
+        />
+        <Input
           label="Company name"
           name="shipping_address.company"
           value={formData["shipping_address.company"]}
-          defaultValue={cart?.company?.name}
           onChange={handleChange}
           autoComplete="organization"
           data-testid="shipping-company-input"
@@ -134,16 +149,17 @@ const ShippingAddressForm = ({
           data-testid="shipping-address-input"
           colSpan={2}
         />
+        <Input
+          label="Postal code"
+          name="shipping_address.postal_code"
+          autoComplete="postal-code"
+          value={formData["shipping_address.postal_code"]}
+          onChange={handleChange}
+          required
+          data-testid="shipping-postal-code-input"
+          colSpan={2}
+        />
         <div className="grid small:grid-cols-3 grid-cols-2 gap-4 col-span-2">
-          <Input
-            label="Postal code"
-            name="shipping_address.postal_code"
-            autoComplete="postal-code"
-            value={formData["shipping_address.postal_code"]}
-            onChange={handleChange}
-            required
-            data-testid="shipping-postal-code-input"
-          />
           <Input
             label="City"
             name="shipping_address.city"
@@ -152,6 +168,14 @@ const ShippingAddressForm = ({
             onChange={handleChange}
             required
             data-testid="shipping-city-input"
+          />
+          <Input
+            label="Province"
+            name="shipping_address.province"
+            autoComplete="address-level1"
+            value={formData["shipping_address.province"]}
+            onChange={handleChange}
+            data-testid="shipping-province-input"
           />
           <CountrySelect
             className="col-span-2"

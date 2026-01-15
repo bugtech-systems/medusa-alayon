@@ -1,8 +1,8 @@
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@medusajs/ui"
 
-import LineItemOptions from "@modules/common/components/line-item-options"
-import Thumbnail from "@modules/products/components/thumbnail"
+import LineItemOptions from "@/modules/common/components/line-item-options"
+import Thumbnail from "@/modules/products/components/thumbnail"
 import ItemTotalPrice from "./item-total-price"
 
 type ItemProps = {
@@ -12,12 +12,12 @@ type ItemProps = {
 
 const Item = ({ item, order }: ItemProps) => {
   return (
-    <div className="flex gap-x-4">
-      <div className="w-20">
+    <tr className="flex gap-x-4">
+      <td className="w-20">
         <Thumbnail thumbnail={item.thumbnail} size="square" />
-      </div>
+      </td>
 
-      <div className="flex flex-col w-full">
+      <td className="flex flex-col w-full">
         <div>
           <Text className="font-normal" data-testid="product-name">
             {item.product_title}
@@ -42,8 +42,8 @@ const Item = ({ item, order }: ItemProps) => {
             <ItemTotalPrice item={item} currencyCode={order.currency_code} />
           </div>
         </div>
-      </div>
-    </div>
+      </td>
+    </tr>
   )
 }
 

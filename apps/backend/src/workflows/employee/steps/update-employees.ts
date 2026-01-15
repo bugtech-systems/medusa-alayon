@@ -1,12 +1,11 @@
-import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
-import {
-  ModuleUpdateEmployee,
-  ModuleEmployee,
-  ICompanyModuleService,
-  QueryEmployee,
-} from "@starter/types";
-import { COMPANY_MODULE } from "../../../modules/company";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
+import { COMPANY_MODULE } from "../../../modules/company";
+import {
+  ICompanyModuleService,
+  ModuleUpdateEmployee,
+  QueryEmployee,
+} from "../../../types";
 
 export const updateEmployeesStep = createStep(
   "update-employees",
@@ -21,7 +20,7 @@ export const updateEmployeesStep = createStep(
 
     const {
       data: [currentData],
-    }: { data: QueryEmployee[] } = await query.graph({
+    } = await query.graph({
       entity: "employee",
       fields: ["*"],
       filters: {
@@ -33,7 +32,7 @@ export const updateEmployeesStep = createStep(
 
     const {
       data: [employee],
-    }: { data: QueryEmployee[] } = await query.graph({
+    } = await query.graph({
       entity: "employee",
       fields: ["*", "customer.*", "company.*"],
       filters: {
@@ -41,14 +40,15 @@ export const updateEmployeesStep = createStep(
       },
     });
 
-    return new StepResponse(employee, currentData);
+    return new StepResponse(
+      employee as unknown as QueryEmployee,
+      currentData as unknown as QueryEmployee
+    );
   },
   async (currentData: ModuleUpdateEmployee, { container }) => {
     const companyModuleService =
       container.resolve<ICompanyModuleService>(COMPANY_MODULE);
 
     await companyModuleService.updateEmployees(currentData);
-
-    return new StepResponse("Company customer data restored", currentData);
   }
 );

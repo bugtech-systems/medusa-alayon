@@ -1,10 +1,11 @@
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
+import { COMPANY_MODULE } from "../../../modules/company";
 import {
   ICompanyModuleService,
   ModuleCreateEmployee,
   ModuleEmployee,
-} from "@starter/types";
-import { COMPANY_MODULE } from "../../../modules/company";
+} from "../../../types";
 
 export const createEmployeesStep = createStep(
   "create-employees",
@@ -15,14 +16,26 @@ export const createEmployeesStep = createStep(
     const companyModuleService =
       container.resolve<ICompanyModuleService>(COMPANY_MODULE);
 
-    const employee = await companyModuleService.createEmployees(input);
+    const createdEmployee = await companyModuleService.createEmployees(input);
 
-    return new StepResponse(employee, employee.id);
+    const query = container.resolve(ContainerRegistrationKeys.QUERY);
+
+    const {
+      data: [employee],
+    } = await query.graph(
+      {
+        entity: "employee",
+        filters: { id: createdEmployee.id },
+        fields: ["id", "company.*"],
+      },
+      { throwIfKeyNotFound: true }
+    );
+
+    return new StepResponse(employee as unknown as ModuleEmployee, employee.id);
   },
   async (employeeId: string, { container }) => {
     const companyModuleService =
       container.resolve<ICompanyModuleService>(COMPANY_MODULE);
     await companyModuleService.deleteEmployees([employeeId]);
-    return new StepResponse("Employee deleted", employeeId);
   }
 );

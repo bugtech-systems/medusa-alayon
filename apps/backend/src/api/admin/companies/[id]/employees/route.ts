@@ -13,12 +13,15 @@ export const GET = async (
   const { id } = req.params;
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const { data: employees, metadata } = await query.graph(
+  const {
+    data: [{ employees }],
+    metadata,
+  } = await query.graph(
     {
-      entity: "employee",
-      fields: req.remoteQueryConfig.fields,
+      entity: "company",
+      fields: [...req.queryConfig.fields, "employees.*"],
       filters: {
-        company_id: id,
+        id,
         ...req.filterableFields,
       },
     },
@@ -53,7 +56,7 @@ export const POST = async (
   } = await query.graph(
     {
       entity: "employee",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id: createdEmployee.id },
     },
     { throwIfKeyNotFound: true }

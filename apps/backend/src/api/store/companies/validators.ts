@@ -1,5 +1,6 @@
 import { createSelectParams } from "@medusajs/medusa/api/utils/validators";
 import { z } from "zod";
+import { ApprovalStatusType } from "../../../types/approval";
 
 /* Company Validators */
 export type StoreGetCompanyParamsType = z.infer<typeof StoreGetCompanyParams>;
@@ -18,6 +19,10 @@ export const StoreCreateCompany = z
     zip: z.string().optional().nullable(),
     country: z.string().optional().nullable(),
     logo_url: z.string().optional().nullable(),
+    spending_limit_reset_frequency: z
+      .enum(["never", "daily", "weekly", "monthly", "yearly"])
+      .optional()
+      .nullable(),
   })
   .strict();
 
@@ -34,6 +39,10 @@ export const StoreUpdateCompany = z
     zip: z.string().optional().nullable(),
     country: z.string().optional().nullable(),
     logo_url: z.string().optional().nullable(),
+    spending_limit_reset_frequency: z
+      .enum(["never", "daily", "weekly", "monthly", "yearly"])
+      .optional()
+      .nullable(),
   })
   .strict();
 
@@ -63,3 +72,34 @@ export const StoreUpdateEmployee = z
     is_admin: z.boolean().optional(),
   })
   .strict();
+
+/* Approval Settings Validators */
+export type StoreGetApprovalSettingsParamsType = z.infer<
+  typeof StoreGetApprovalSettingsParams
+>;
+export const StoreGetApprovalSettingsParams = createSelectParams();
+
+export type StoreUpdateApprovalSettingsType = z.infer<
+  typeof StoreUpdateApprovalSettings
+>;
+export const StoreUpdateApprovalSettings = z
+  .object({
+    requires_admin_approval: z.boolean(),
+  })
+  .strict();
+
+/* Approval Validators */
+export type StoreGetApprovalParamsType = z.infer<typeof StoreGetApprovalParams>;
+export const StoreGetApprovalParams = createSelectParams();
+
+export type StoreUpdateApprovalType = z.infer<typeof StoreUpdateApproval>;
+export const StoreUpdateApproval = z.object({
+  status: z.nativeEnum(ApprovalStatusType),
+  handled_by: z.string(),
+});
+
+export type StoreDeleteApprovalType = z.infer<typeof StoreDeleteApproval>;
+export const StoreDeleteApproval = z.object({
+  id: z.string(),
+});
+``;

@@ -1,8 +1,9 @@
 "use client"
 
-import { cartToCsv } from "@lib/util/convert-cart-to-csv"
-import Button from "@modules/common/components/button"
-import { B2BCart } from "types/global"
+import { cartToCsv } from "@/lib/util/convert-cart-to-csv"
+import Button from "@/modules/common/components/button"
+import { B2BCart } from "@/types"
+import { Text } from "@medusajs/ui"
 import { useState } from "react"
 
 type CartToCsvButtonProps = {
@@ -15,6 +16,7 @@ const CartToCsvButton = ({ cart }: CartToCsvButtonProps) => {
 
   const handleExportCart = async () => {
     setIsExportingCart(true)
+    setError(null)
 
     const csv = cartToCsv(cart)
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
@@ -48,14 +50,17 @@ const CartToCsvButton = ({ cart }: CartToCsvButtonProps) => {
   }
 
   return (
-    <Button
-      className="w-full h-10 rounded-full shadow-borders-base"
-      variant="secondary"
-      onClick={handleExportCart}
-      isLoading={isExportingCart}
-    >
-      Export Cart (.csv)
-    </Button>
+    <div className="flex flex-col gap-y-2 items-center">
+      <Button
+        className="w-full h-10 rounded-full shadow-borders-base"
+        variant="secondary"
+        onClick={handleExportCart}
+        isLoading={isExportingCart}
+      >
+        Export Cart (.csv)
+      </Button>
+      {error && <Text className="text-red-500">{error}</Text>}
+    </div>
   )
 }
 

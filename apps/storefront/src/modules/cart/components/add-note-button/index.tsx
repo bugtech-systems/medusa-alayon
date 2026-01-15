@@ -1,11 +1,24 @@
-import { updateLineItem } from "@lib/data/cart"
+import { updateLineItem } from "@/lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { Input, clx } from "@medusajs/ui"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 
-const AddNoteButton = ({ item }: { item: HttpTypes.StoreCartLineItem }) => {
+const AddNoteButton = ({
+  item,
+  disabled,
+}: {
+  item: HttpTypes.StoreCartLineItem
+  disabled?: boolean
+}) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [note, setNote] = useState(item.metadata?.note as string)
+  const [note, setNote] = useState((item.metadata?.note as string) || "")
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isOpen])
 
   const setNoteMetadata = async (newNote: string) => {
     setIsOpen(false)
@@ -34,13 +47,15 @@ const AddNoteButton = ({ item }: { item: HttpTypes.StoreCartLineItem }) => {
 
   return (
     <div className="relative w-fit flex items-center justify-center">
-      {!note && (
+      {!note && !isOpen && (
         <button
           className={clx(
             "text-neutral-950 text-xs shadow-[0_0_0_1px_rgba(0,0,0,0.1)] rounded-full px-2 py-1 w-fit min-w-20 h-6 flex items-center justify-center hover:bg-neutral-100 transition-all duration-300",
-            isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+            isOpen ? "opacity-0 pointer-events-none" : "opacity-100",
+            disabled ? "opacity-50 pointer-events-none" : "opacity-100"
           )}
           onClick={() => setIsOpen(true)}
+          disabled={disabled}
         >
           Add note
         </button>
@@ -77,6 +92,7 @@ const AddNoteButton = ({ item }: { item: HttpTypes.StoreCartLineItem }) => {
         <span className="text-neutral-950">Note:&nbsp;</span>
 
         <Input
+          ref={inputRef}
           className="w-fit small:max-w-40 max-w-32 h-6 flex items-center justify-center text-neutral-950 text-xs rounded-full"
           type="text"
           value={note}

@@ -13,12 +13,15 @@ export const GET = async (
   const { id } = req.params;
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const { data: employees, metadata } = await query.graph(
+  const {
+    data: [{ employees }],
+    metadata,
+  } = await query.graph(
     {
-      entity: "employee",
-      fields: req.remoteQueryConfig.fields,
+      entity: "company",
+      fields: [...req.queryConfig.fields, "employees.*"],
       filters: {
-        company_id: id,
+        id,
         ...req.filterableFields,
       },
     },
@@ -43,10 +46,10 @@ export const POST = async (
   const { result: createdEmployee } = await createEmployeesWorkflow.run({
     input: {
       employeeData: {
-        ...req.body,
+        ...req.validatedBody,
         company_id: id,
       },
-      customerId: req.body.customer_id,
+      customerId: req.validatedBody.customer_id,
     },
     container: req.scope,
   });
@@ -56,11 +59,10 @@ export const POST = async (
   } = await query.graph(
     {
       entity: "employee",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: {
         ...req.filterableFields,
         id: createdEmployee.id,
-        company_id: id,
       },
     },
     { throwIfKeyNotFound: true }

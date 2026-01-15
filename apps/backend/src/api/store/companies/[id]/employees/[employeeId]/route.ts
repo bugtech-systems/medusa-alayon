@@ -13,7 +13,7 @@ export const GET = async (
   req: MedusaRequest<StoreGetEmployeeParamsType>,
   res: MedusaResponse
 ) => {
-  const { id, employeeId } = req.params;
+  const { employeeId } = req.params;
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
@@ -21,11 +21,11 @@ export const GET = async (
   } = await query.graph(
     {
       entity: "employee",
-      fields: req.remoteQueryConfig.fields,
+      // TODO: fix this
+      fields: req.queryConfig.fields,
       filters: {
         ...req.filterableFields,
         id: employeeId,
-        company_id: id,
       },
     },
     { throwIfKeyNotFound: true }
@@ -57,11 +57,11 @@ export const POST = async (
   } = await query.graph(
     {
       entity: "employee",
-      fields: req.remoteQueryConfig.fields,
+      // TODO: fix this
+      fields: req.queryConfig.fields,
       filters: {
         ...req.filterableFields,
         id: employeeId,
-        company_id: id,
       },
     },
     { throwIfKeyNotFound: true }

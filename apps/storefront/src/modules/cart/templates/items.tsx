@@ -1,10 +1,10 @@
-import { convertToLocale } from "@lib/util/money"
-import repeat from "@lib/util/repeat"
+import { getCartApprovalStatus } from "@/lib/util/get-cart-approval-status"
+import { convertToLocale } from "@/lib/util/money"
+import ItemFull from "@/modules/cart/components/item-full"
+import { B2BCart } from "@/types/global"
 import { StoreCartLineItem } from "@medusajs/types"
 import { Container, Text } from "@medusajs/ui"
-import Item from "@modules/cart/components/item"
-import SkeletonLineItem from "@modules/skeletons/components/skeleton-line-item"
-import { B2BCart } from "types/global"
+import { useMemo } from "react"
 
 type ItemsTemplateProps = {
   cart: B2BCart
@@ -18,43 +18,44 @@ const ItemsTemplate = ({
   showTotal = true,
 }: ItemsTemplateProps) => {
   const items = cart?.items
+  const totalQuantity = useMemo(
+    () => cart?.items?.reduce((acc, item) => acc + item.quantity, 0),
+    [cart?.items]
+  )
+
+  const { isPendingAdminApproval, isPendingSalesManagerApproval } =
+    getCartApprovalStatus(cart)
+
+  const isPendingApproval =
+    isPendingAdminApproval || isPendingSalesManagerApproval
 
   return (
     <div className="w-full flex flex-col gap-y-2">
       <div className="flex flex-col gap-y-2 w-full">
-        {items
-          ? items
-              .sort((a, b) => {
-                if (a.created_at === b.created_at) {
-                  return a.id?.localeCompare(b.id ?? "") ?? 0
+        {items &&
+          items.map((item: StoreCartLineItem) => {
+            return (
+              <ItemFull
+                disabled={isPendingApproval}
+                currencyCode={cart?.currency_code}
+                showBorders={showBorders}
+                key={item.id}
+                item={
+                  item as StoreCartLineItem & {
+                    metadata?: { note?: string }
+                  }
                 }
-
-                return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
-              })
-              .map((item: StoreCartLineItem) => {
-                return (
-                  <Item
-                    showBorders={showBorders}
-                    key={item.id}
-                    item={
-                      item as StoreCartLineItem & {
-                        metadata?: { note?: string }
-                      }
-                    }
-                  />
-                )
-              })
-          : repeat(5).map((i) => {
-              return <SkeletonLineItem key={i} />
-            })}
+              />
+            )
+          })}
       </div>
       {showTotal && (
         <Container>
           <div className="flex items-start justify-between h-full self-stretch">
-            <Text>Total: {items?.length} items</Text>
+            <Text>Total: {totalQuantity} items</Text>
             <Text>
               {convertToLocale({
-                amount: cart?.total,
+                amount: cart?.item_total,
                 currency_code: cart?.currency_code,
               })}
             </Text>

@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { JsonViewSection } from "../../../components/common/json-view-section";
-import { useOrderPreview } from "../../../hooks";
+import { useOrderPreview } from "../../../hooks/api";
 import {
   useQuote,
   useRejectQuote,
@@ -36,7 +36,7 @@ const QuoteDetails = () => {
   const navigate = useNavigate();
   const { quote, isLoading } = useQuote(quoteId!, {
     fields:
-      "+draft_order.customer.*,+draft_order.customer.employee.*, +draft_order.customer.employee.company.*",
+      "*draft_order.customer,*draft_order.customer.employee,*draft_order.customer.employee.company",
   });
 
   const { order: preview, isLoading: isPreviewLoading } = useOrderPreview(
@@ -219,8 +219,9 @@ const QuoteDetails = () => {
 
               <Text size="small" leading="compact" className="text-pretty">
                 {formatAmount(
-                  quote.draft_order?.customer?.employee.spending_limit,
-                  quote.draft_order?.customer?.employee?.company?.currency_code
+                  quote?.customer?.employee?.spending_limit,
+                  (quote?.customer?.employee?.company
+                    ?.currency_code as string) || "USD"
                 )}
               </Text>
             </div>
@@ -238,10 +239,10 @@ const QuoteDetails = () => {
 
               <Link
                 className="text-sm text-pretty text-blue-500"
-                to={`/companies/${quote.draft_order?.customer?.employee?.company.id}`}
+                to={`/companies/${quote?.customer?.employee?.company.id}`}
                 onClick={(e) => e.stopPropagation()}
               >
-                {quote.draft_order?.customer?.employee?.company?.name}
+                {quote?.customer?.employee?.company?.name}
               </Link>
             </div>
           </Container>

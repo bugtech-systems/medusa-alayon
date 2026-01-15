@@ -1,15 +1,54 @@
 "use server"
 
-import { sdk } from "@lib/config"
-import { cache } from "react"
-import { getCacheHeaders } from "./cookies"
+import { sdk } from "@/lib/config"
+import { getAuthHeaders, getCacheOptions } from "@/lib/data/cookies"
+import { StoreFreeShippingPrice } from "@/types/shipping-option/http"
+import { HttpTypes } from "@medusajs/types"
 
-// Shipping actions
-export const listCartShippingMethods = cache(async function (cartId: string) {
-  return sdk.store.fulfillment
-    .listCartOptions({ cart_id: cartId }, { ...getCacheHeaders("fulfillment") })
+export const listCartShippingMethods = async (cartId: string) => {
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  const next = {
+    ...(await getCacheOptions("fulfillment")),
+  }
+
+  return sdk.client
+    .fetch<HttpTypes.StoreShippingOptionListResponse>(
+      `/store/shipping-options`,
+      {
+        method: "GET",
+        query: { cart_id: cartId },
+        headers,
+        next,
+      }
+    )
     .then(({ shipping_options }) => shipping_options)
     .catch(() => {
       return null
     })
-})
+}
+
+export const listCartFreeShippingPrices = async (
+  cartId: string
+): Promise<StoreFreeShippingPrice[]> => {
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  const next = {
+    ...(await getCacheOptions("freeShipping")),
+  }
+
+  return sdk.client
+    .fetch<{
+      prices: StoreFreeShippingPrice[]
+    }>(`/store/free-shipping/prices`, {
+      method: "GET",
+      query: { cart_id: cartId },
+      headers,
+      next,
+    })
+    .then((data) => data.prices)
+}

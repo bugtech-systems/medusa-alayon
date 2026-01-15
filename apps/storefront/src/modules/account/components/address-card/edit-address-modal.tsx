@@ -3,20 +3,19 @@
 import {
   deleteCustomerAddress,
   updateCustomerAddress,
-} from "@lib/data/customer"
-import useToggleState from "@lib/hooks/use-toggle-state"
+} from "@/lib/data/customer"
+import useToggleState from "@/lib/hooks/use-toggle-state"
+import CountrySelect from "@/modules/checkout/components/country-select"
+import { SubmitButton } from "@/modules/checkout/components/submit-button"
+import Button from "@/modules/common/components/button"
+import Input from "@/modules/common/components/input"
+import Modal from "@/modules/common/components/modal"
+import Spinner from "@/modules/common/icons/spinner"
+import { B2BCustomer } from "@/types/global"
 import { PencilSquare as Edit, Trash } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { Heading, Text, clx } from "@medusajs/ui"
-import CountrySelect from "@modules/checkout/components/country-select"
-import { SubmitButton } from "@modules/checkout/components/submit-button"
-import Button from "@modules/common/components/button"
-import Input from "@modules/common/components/input"
-import Modal from "@modules/common/components/modal"
-import Spinner from "@modules/common/icons/spinner"
-import React, { useEffect, useState } from "react"
-import { useFormState } from "react-dom"
-import { B2BCustomer } from "types/global"
+import React, { useActionState, useEffect, useState } from "react"
 
 type EditAddressProps = {
   region: HttpTypes.StoreRegion
@@ -35,7 +34,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
   const [successState, setSuccessState] = useState(false)
   const { state, open, close: closeModal } = useToggleState(false)
 
-  const [formState, formAction] = useFormState(updateCustomerAddress, {
+  const [formState, formAction] = useActionState(updateCustomerAddress, {
     success: false,
     error: null,
     addressId: address.id,
@@ -61,7 +60,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
 
   const removeAddress = async () => {
     setRemoving(true)
-    await deleteCustomerAddress(address.id, customer.id)
+    await deleteCustomerAddress(address.id)
     setRemoving(false)
   }
 

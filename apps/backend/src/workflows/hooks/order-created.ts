@@ -1,17 +1,17 @@
-import { createOrdersWorkflow } from "@medusajs/core-flows";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+import { createOrderWorkflow } from "@medusajs/core-flows";
 import { StepResponse } from "@medusajs/workflows-sdk";
 import { COMPANY_MODULE } from "../../modules/company";
 
-createOrdersWorkflow.hooks.orderCreated(
+createOrderWorkflow.hooks.orderCreated(
   async ({ order }, { container }) => {
-    const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK);
+    const remoteLink = container.resolve(ContainerRegistrationKeys.LINK);
 
     if (!order.metadata?.company_id) {
       return new StepResponse(undefined, null);
     }
 
-    remoteLink.create({
+    await remoteLink.create({
       [Modules.ORDER]: {
         order_id: order.id,
       },
@@ -27,9 +27,9 @@ createOrdersWorkflow.hooks.orderCreated(
       return;
     }
 
-    const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK);
+    const remoteLink = container.resolve(ContainerRegistrationKeys.LINK);
 
-    remoteLink.dismiss({
+    await remoteLink.dismiss({
       [Modules.ORDER]: {
         order_id: orderId,
       },

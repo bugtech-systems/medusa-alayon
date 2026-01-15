@@ -16,18 +16,16 @@ export const GET = async (
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const { id } = req.params;
 
-  const {
-    data: [company],
-  } = await query.graph(
+  const { data } = await query.graph(
     {
       entity: "companies",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }
   );
 
-  res.json({ company });
+  res.json({ company: data[0] });
 };
 
 export const POST = async (
@@ -42,6 +40,7 @@ export const POST = async (
       id,
       ...req.body,
     },
+    container: req.scope,
   });
 
   const {
@@ -49,7 +48,7 @@ export const POST = async (
   } = await query.graph(
     {
       entity: "companies",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }
@@ -61,11 +60,11 @@ export const POST = async (
 export const DELETE = async (req: MedusaRequest, res: MedusaResponse) => {
   const { id } = req.params;
 
-  await deleteCompaniesWorkflow.run({ input: { id } });
-
-  res.json({
-    id,
-    object: "employee",
-    deleted: true,
+  await deleteCompaniesWorkflow.run({
+    input: { id },
+    container: req.scope,
+    throwOnError: true,
   });
+
+  res.status(204).send();
 };

@@ -1,21 +1,34 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk";
 import { BuildingStorefront } from "@medusajs/icons";
-import { Avatar, Container, Heading, Table, Text, Toaster } from "@medusajs/ui";
-import { CompanyDTO } from "../../../modules/company/types/common";
-import { CompanyActionsMenu, CompanyCreateDrawer } from "../../components";
-import { useCompanies } from "../../hooks/companies";
+import {
+  Avatar,
+  Badge,
+  Container,
+  Heading,
+  Table,
+  Text,
+  Toaster,
+} from "@medusajs/ui";
+import { QueryCompany } from "../../../types";
+import { useAdminCustomerGroups, useCompanies } from "../../hooks/api";
+import { CompanyActionsMenu, CompanyCreateDrawer } from "./components";
 
 const Companies = () => {
-  const { data, loading, refetch } = useCompanies();
+  const { data, isPending } = useCompanies({
+    fields:
+      "*employees,*employees.customer,*employees.company,*customer_group,*approval_settings",
+  });
+
+  const { data: customerGroups } = useAdminCustomerGroups();
 
   return (
     <>
       <Container className="flex flex-col p-0 overflow-hidden">
         <div className="p-6 flex justify-between">
           <Heading className="font-sans font-medium h1-core">Companies</Heading>
-          <CompanyCreateDrawer refetch={refetch} />
+          <CompanyCreateDrawer />
         </div>
-        {loading && <Text>Loading...</Text>}
+        {isPending && <Text>Loading...</Text>}
         <Table>
           <Table.Header>
             <Table.Row>
@@ -25,12 +38,13 @@ const Companies = () => {
               <Table.HeaderCell>Email</Table.HeaderCell>
               <Table.HeaderCell>Address</Table.HeaderCell>
               <Table.HeaderCell>Employees</Table.HeaderCell>
+              <Table.HeaderCell>Customer Group</Table.HeaderCell>
               <Table.HeaderCell>Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {data?.companies && (
             <Table.Body>
-              {data.companies.map((company: CompanyDTO) => (
+              {data.companies.map((company: QueryCompany) => (
                 <Table.Row
                   key={company.id}
                   className="cursor-pointer hover:bg-gray-50"
@@ -49,8 +63,20 @@ const Companies = () => {
                   <Table.Cell>{company.email}</Table.Cell>
                   <Table.Cell>{`${company.address}, ${company.city}, ${company.state} ${company.zip}`}</Table.Cell>
                   <Table.Cell>{company.employees?.length || 0}</Table.Cell>
+                  <Table.Cell>
+                    {company.customer_group?.name ? (
+                      <Badge size="small" color="blue">
+                        {company.customer_group.name}
+                      </Badge>
+                    ) : (
+                      "-"
+                    )}
+                  </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
-                    <CompanyActionsMenu company={company} refetch={refetch} />
+                    <CompanyActionsMenu
+                      company={company}
+                      customerGroups={customerGroups}
+                    />
                   </Table.Cell>
                 </Table.Row>
               ))}

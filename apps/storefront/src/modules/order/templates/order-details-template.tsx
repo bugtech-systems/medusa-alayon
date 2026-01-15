@@ -3,12 +3,13 @@ import React from "react"
 
 import { HttpTypes } from "@medusajs/types"
 import { Container } from "@medusajs/ui"
-import Button from "@modules/common/components/button"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import Item from "@modules/order/components/item"
-import OrderDetails from "@modules/order/components/order-details"
-import OrderSummary from "@modules/order/components/order-summary"
-import ShippingDetails from "@modules/order/components/shipping-details"
+import Button from "@/modules/common/components/button"
+import LocalizedClientLink from "@/modules/common/components/localized-client-link"
+import Item from "@/modules/order/components/item"
+import OrderDetails from "@/modules/order/components/order-details"
+import OrderSummary from "@/modules/order/components/order-summary"
+import ShippingDetails from "@/modules/order/components/shipping-details"
+import BillingDetails from "@/modules/order/components/billing-details"
 
 type OrderDetailsTemplateProps = {
   order: HttpTypes.StoreOrder
@@ -54,6 +55,11 @@ const OrderDetailsTemplate: React.FC<OrderDetailsTemplateProps> = ({
           {(!!order.shipping_address || !!order.shipping_methods?.length) && (
             <Container>
               <ShippingDetails order={order} />
+            </Container>
+          )}
+          {!!order.billing_address && (
+            <Container>
+              <BillingDetails order={order} />
             </Container>
           )}
         </div>

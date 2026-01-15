@@ -1,23 +1,35 @@
-import Input from "@modules/common/components/input"
+import CountrySelect from "@/modules/checkout/components/country-select"
+import Input from "@/modules/common/components/input"
+import { B2BCart } from "@/types"
 import React, { useEffect, useState } from "react"
-import { B2BCart } from "types/global"
-import CountrySelect from "../country-select"
 
 const BillingAddressForm = ({ cart }: { cart: B2BCart | null }) => {
-  const [formData, setFormData] = useState<any>({})
+  const [formData, setFormData] = useState<Record<string, any>>({
+    "billing_address.first_name": "",
+    "billing_address.last_name": "",
+    "billing_address.address_1": "",
+    "billing_address.company": cart?.company?.name || "",
+    "billing_address.postal_code": "",
+    "billing_address.city": "",
+    "billing_address.country_code": "",
+    "billing_address.province": "",
+    "billing_address.phone": "",
+  })
 
   useEffect(() => {
-    setFormData({
-      "billing_address.first_name": cart?.billing_address?.first_name || "",
-      "billing_address.last_name": cart?.billing_address?.last_name || "",
-      "billing_address.address_1": cart?.billing_address?.address_1 || "",
-      "billing_address.company": cart?.billing_address?.company || "",
-      "billing_address.postal_code": cart?.billing_address?.postal_code || "",
-      "billing_address.city": cart?.billing_address?.city || "",
-      "billing_address.country_code": cart?.billing_address?.country_code || "",
-      "billing_address.province": cart?.billing_address?.province || "",
-      "billing_address.phone": cart?.billing_address?.phone || "",
-    })
+    if (cart?.billing_address) {
+      setFormData({
+        "billing_address.first_name": cart.billing_address.first_name || "",
+        "billing_address.last_name": cart.billing_address.last_name || "",
+        "billing_address.address_1": cart.billing_address.address_1 || "",
+        "billing_address.company": cart.billing_address.company || "",
+        "billing_address.postal_code": cart.billing_address.postal_code || "",
+        "billing_address.city": cart.billing_address.city || "",
+        "billing_address.country_code": cart.billing_address.country_code || "",
+        "billing_address.province": cart.billing_address.province || "",
+        "billing_address.phone": cart.billing_address.phone || "",
+      })
+    }
   }, [cart?.billing_address])
 
   const handleChange = (
@@ -53,9 +65,17 @@ const BillingAddressForm = ({ cart }: { cart: B2BCart | null }) => {
           data-testid="billing-last-name-input"
         />
         <Input
+          label="Phone"
+          name="billing_address.phone"
+          autoComplete="tel"
+          value={formData["billing_address.phone"]}
+          onChange={handleChange}
+          required
+          data-testid="billing-phone-input"
+        />
+        <Input
           label="Company name"
           name="billing_address.company"
-          defaultValue={cart?.company?.name}
           value={formData["billing_address.company"]}
           onChange={handleChange}
           autoComplete="organization"
@@ -72,16 +92,17 @@ const BillingAddressForm = ({ cart }: { cart: B2BCart | null }) => {
           data-testid="billing-address-input"
           colSpan={2}
         />
+        <Input
+          label="Postal code"
+          name="billing_address.postal_code"
+          autoComplete="postal-code"
+          value={formData["billing_address.postal_code"]}
+          onChange={handleChange}
+          required
+          data-testid="billing-postal-code-input"
+          colSpan={2}
+        />
         <div className="grid small:grid-cols-3 grid-cols-2 gap-4 col-span-2">
-          <Input
-            label="Postal code"
-            name="billing_address.postal_code"
-            autoComplete="postal-code"
-            value={formData["billing_address.postal_code"]}
-            onChange={handleChange}
-            required
-            data-testid="billing-postal-code-input"
-          />
           <Input
             label="City"
             name="billing_address.city"
@@ -90,6 +111,15 @@ const BillingAddressForm = ({ cart }: { cart: B2BCart | null }) => {
             onChange={handleChange}
             required
             data-testid="billing-city-input"
+          />
+          <Input
+            label="Province"
+            name="billing_address.province"
+            autoComplete="address-level1"
+            value={formData["billing_address.province"]}
+            onChange={handleChange}
+            required
+            data-testid="billing-province-input"
           />
           <CountrySelect
             name="billing_address.country_code"

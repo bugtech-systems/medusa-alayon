@@ -1,5 +1,5 @@
+import { B2BCart } from "@/types/global"
 import { HttpTypes } from "@medusajs/types"
-import { B2BCart } from "types/global"
 
 // Function to convert the cart items into CSV format
 export function cartToCsv(cart: B2BCart) {

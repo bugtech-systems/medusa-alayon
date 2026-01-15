@@ -1,16 +1,28 @@
-import { Metadata } from "next"
-
-import { getBaseURL } from "@lib/util/env"
+import { retrieveCart } from "@/lib/data/cart"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { listCartFreeShippingPrices } from "@/lib/data/fulfillment"
+import { getBaseURL } from "@/lib/util/env"
+import CartMismatchBanner from "@/modules/layout/components/cart-mismatch-banner"
+import Footer from "@/modules/layout/templates/footer"
+import { NavigationHeader } from "@/modules/layout/templates/nav"
+import FreeShippingPriceNudge from "@/modules/shipping/components/free-shipping-price-nudge"
+import { StoreFreeShippingPrice } from "@/types/shipping-option/http"
 import { ArrowUpRightMini, ExclamationCircleSolid } from "@medusajs/icons"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import Footer from "@modules/layout/templates/footer"
-import { NavigationHeader } from "@modules/layout/templates/nav"
+import { Metadata } from "next"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
 }
 
 export default async function PageLayout(props: { children: React.ReactNode }) {
+  const customer = await retrieveCustomer().catch(() => null)
+  const cart = await retrieveCart()
+  let freeShippingPrices: StoreFreeShippingPrice[] = []
+
+  if (cart) {
+    freeShippingPrices = await listCartFreeShippingPrices(cart.id)
+  }
+
   return (
     <>
       <NavigationHeader />
@@ -18,21 +30,35 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
         <div className="flex flex-col small:flex-row small:gap-2 gap-1 items-center">
           <span className="flex items-center gap-1">
             <ExclamationCircleSolid className="inline" color="#A1A1AA" />
-            Favorites at a great price! For a limited time only
+            Build your own B2B store with this starter:
           </span>
-          <span className="hidden small:inline">·</span>
 
-          <LocalizedClientLink
+          <a
             className="group hover:text-ui-fg-interactive-hover text-ui-fg-interactive self-end small:self-auto"
-            href="/"
+            href="https://git.new/b2b-starter-repo"
+            target="_blank"
           >
-            Go to Products
+            GitHub Repo
             <ArrowUpRightMini className="group-hover:text-ui-fg-interactive-hover inline text-ui-fg-interactive" />
-          </LocalizedClientLink>
+          </a>
         </div>
       </div>
+
+      {customer && cart && (
+        <CartMismatchBanner customer={customer} cart={cart} />
+      )}
+
       {props.children}
+
       <Footer />
+
+      {cart && freeShippingPrices && (
+        <FreeShippingPriceNudge
+          variant="popup"
+          cart={cart}
+          freeShippingPrices={freeShippingPrices}
+        />
+      )}
     </>
   )
 }

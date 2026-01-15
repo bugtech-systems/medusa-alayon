@@ -1,4 +1,4 @@
-import { useRemoteQueryStep } from "@medusajs/medusa/core-flows";
+import { useRemoteQueryStep } from '@medusajs/core-flows';
 import { createWorkflow, WorkflowResponse } from "@medusajs/workflows-sdk";
 import { updateOrderStep } from "../steps/update-order";
 
@@ -7,7 +7,7 @@ import { updateOrderStep } from "../steps/update-order";
   to an active order.
 */
 export const updateOrderWorkflow = createWorkflow(
-  "update-order-workflow",
+  "b2b-update-order-workflow",
   function (input: { id: string; is_draft_order: boolean; status: string }) {
     useRemoteQueryStep({
       entry_point: "order",

@@ -1,17 +1,17 @@
 "use client"
 
-import { currencySymbolMap } from "@lib/constants"
-import { updateCompany } from "@lib/data/companies"
-import { AdminRegionCountry, HttpTypes } from "@medusajs/types"
-import { Container, Text, Toaster, clx, toast } from "@medusajs/ui"
-import Button from "@modules/common/components/button"
-import Input from "@modules/common/components/input"
-import Select from "@modules/common/components/native-select"
+import { currencySymbolMap } from "@/lib/constants"
+import { updateCompany } from "@/lib/data/companies"
+import Button from "@/modules/common/components/button"
+import Input from "@/modules/common/components/input"
+import Select from "@/modules/common/components/native-select"
 import {
   ModuleCompanySpendingLimitResetFrequency,
   StoreCompanyResponse,
   StoreUpdateCompany,
-} from "@starter/types"
+} from "@/types"
+import { AdminRegionCountry, HttpTypes } from "@medusajs/types"
+import { Container, Text, clx, toast } from "@medusajs/ui"
 import { useState } from "react"
 
 const CompanyCard = ({
@@ -71,7 +71,7 @@ const CompanyCard = ({
             <Input
               label="Company Name"
               name="name"
-              value={companyData.name}
+              value={companyData.name || ""}
               onChange={(e) =>
                 setCompanyData({ ...companyData, name: e.target.value })
               }
@@ -82,7 +82,7 @@ const CompanyCard = ({
             <Input
               label="Email"
               name="email"
-              value={companyData.email}
+              value={companyData.email || ""}
               onChange={(e) =>
                 setCompanyData({ ...companyData, email: e.target.value })
               }
@@ -93,7 +93,7 @@ const CompanyCard = ({
             <Input
               label="Phone"
               name="phone"
-              value={companyData.phone}
+              value={companyData.phone || ""}
               onChange={(e) =>
                 setCompanyData({ ...companyData, phone: e.target.value })
               }
@@ -152,8 +152,8 @@ const CompanyCard = ({
                 setCompanyData({ ...companyData, country: e.target.value })
               }
             >
-              {countriesInRegions.map((country) => (
-                <option key={country.id} value={country.id}>
+              {countriesInRegions.map((country, index) => (
+                <option key={index} value={country.id}>
                   {country.name}
                 </option>
               ))}
@@ -274,7 +274,6 @@ const CompanyCard = ({
           )}
         </div>
       </Container>
-      <Toaster />
     </div>
   )
 }

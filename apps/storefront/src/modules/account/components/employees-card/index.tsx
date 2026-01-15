@@ -1,24 +1,25 @@
+import { retrieveCustomer } from "@/lib/data/customer"
+import EmployeeWrapper from "@/modules/account/components/employees-card/employee-wrapper"
+import { QueryCompany } from "@/types"
 import { Container } from "@medusajs/ui"
-import { QueryCompany } from "@starter/types"
-import EmployeeWrapper from "./employee-wrapper"
-import { getCustomer } from "@lib/data/customer"
 
 const EmployeesCard = async ({ company }: { company: QueryCompany }) => {
   const { employees } = company
-  const customer = await getCustomer()
+  const customer = await retrieveCustomer()
 
   return (
     <Container className="p-0 overflow-hidden">
       <div className="flex flex-col">
-        {employees
-          .sort((a) => (a.customer.email === customer?.email ? -1 : 1))
-          .map((employee) => (
-            <EmployeeWrapper
-              key={employee.id}
-              employee={employee}
-              company={company}
-            />
-          ))}
+        {employees &&
+          employees
+            .sort((a) => (a.customer.email === customer?.email ? -1 : 1))
+            .map((employee) => (
+              <EmployeeWrapper
+                key={employee.id}
+                employee={employee}
+                company={company}
+              />
+            ))}
       </div>
     </Container>
   )

@@ -1,13 +1,19 @@
-import { getCategoriesList } from "@lib/data/categories"
-import { getCollectionsList } from "@lib/data/collections"
+import { listCategories } from "@/lib/data/categories"
+import { listCollections } from "@/lib/data/collections"
 import { Text, clx } from "@medusajs/ui"
 
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
+import LocalizedClientLink from "@/modules/common/components/localized-client-link"
+import MedusaCTA from "@/modules/layout/components/medusa-cta"
 
 export default async function Footer() {
-  const { collections } = await getCollectionsList(0, 6)
-  const { product_categories } = await getCategoriesList(0, 6)
+  const { collections } = await listCollections({
+    offset: "0",
+    limit: "6",
+  })
+  const product_categories = await listCategories({
+    offset: 0,
+    limit: 6,
+  })
 
   return (
     <footer className="border-t border-ui-border-base w-full">
@@ -131,7 +137,7 @@ export default async function Footer() {
                 </li>
                 <li>
                   <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
+                    href="https://github.com/medusajs/b2b-starter-medusa"
                     target="_blank"
                     rel="noreferrer"
                     className="hover:text-ui-fg-base"

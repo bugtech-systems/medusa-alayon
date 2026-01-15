@@ -7,11 +7,10 @@ import {
   RemoteQueryFunction,
 } from "@medusajs/framework/types";
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { StoreQuotePreviewResponse } from "@starter/types";
 
 export const GET = async (
   req: AuthenticatedMedusaRequest,
-  res: MedusaResponse<StoreQuotePreviewResponse>
+  res: MedusaResponse
 ) => {
   const { id } = req.params;
   const query = req.scope.resolve<RemoteQueryFunction>(
@@ -23,7 +22,7 @@ export const GET = async (
   } = await query.graph(
     {
       entity: "quote",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }

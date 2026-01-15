@@ -1,11 +1,13 @@
 import { IAuthModuleService } from "@medusajs/framework/types";
-import { Modules } from "@medusajs/framework/utils";
+import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 
 export const setAdminRoleStep = createStep(
   "set-admin-role",
-  async (input: { employeeId: string }, { container }): Promise<any> => {
+  async (
+    input: { employeeId: string; customerId: string },
+    { container }
+  ): Promise<any> => {
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
@@ -13,7 +15,7 @@ export const setAdminRoleStep = createStep(
     } = await query.graph(
       {
         entity: "employee",
-        fields: ["id", "customer", "customer.email"],
+        fields: ["id", "is_admin", "customer.has_account"],
         filters: {
           id: input.employeeId,
         },
@@ -21,7 +23,24 @@ export const setAdminRoleStep = createStep(
       { throwIfKeyNotFound: true }
     );
 
-    if (employee.is_admin === true) {
+    if (employee.customer?.has_account === false) {
+      return new StepResponse(undefined, input);
+    }
+
+    const {
+      data: [customer],
+    } = await query.graph(
+      {
+        entity: "customer",
+        fields: ["email"],
+        filters: {
+          id: input.customerId,
+        },
+      },
+      { throwIfKeyNotFound: true }
+    );
+
+    if (!customer.email) {
       return new StepResponse(undefined, input);
     }
 
@@ -29,10 +48,10 @@ export const setAdminRoleStep = createStep(
       data: [providerIdentity],
     } = await query.graph({
       entity: "provider_identity",
-      fields: ["id"],
+      fields: ["*"],
       filters: {
         provider: "emailpass",
-        entity_id: employee.customer.email,
+        entity_id: customer.email,
       },
     });
 
@@ -40,14 +59,16 @@ export const setAdminRoleStep = createStep(
       Modules.AUTH
     );
 
-    await authModuleService.updateProviderIdentities([
-      {
-        id: providerIdentity.id,
-        user_metadata: {
-          role: "company_admin",
+    if (providerIdentity) {
+      await authModuleService.updateProviderIdentities([
+        {
+          id: providerIdentity.id,
+          user_metadata: {
+            role: "company_admin",
+          },
         },
-      },
-    ]);
+      ]);
+    }
 
     return new StepResponse(undefined, input);
   },
@@ -64,6 +85,5 @@ export const setAdminRoleStep = createStep(
         },
       },
     ]);
-    return new StepResponse(undefined, input);
   }
 );

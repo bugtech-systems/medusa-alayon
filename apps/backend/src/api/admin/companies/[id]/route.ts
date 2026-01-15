@@ -24,7 +24,7 @@ export const GET = async (
   } = await query.graph(
     {
       entity: "companies",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }
@@ -40,14 +40,17 @@ export const POST = async (
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const { id } = req.params;
 
-  await updateCompaniesWorkflow.run({ input: { ...req.body, id } });
+  await updateCompaniesWorkflow.run({
+    input: { ...req.body, id },
+    container: req.scope,
+  });
 
   const {
     data: [company],
   } = await query.graph(
     {
       entity: "companies",
-      fields: req.remoteQueryConfig.fields,
+      fields: req.queryConfig.fields,
       filters: { id },
     },
     { throwIfKeyNotFound: true }

@@ -1,22 +1,22 @@
-import { useFormState } from "react-dom"
-import { LOGIN_VIEW } from "@modules/account/templates/login-template"
+import { login } from "@/lib/data/customer"
+import { LOGIN_VIEW } from "@/modules/account/templates/login-template"
+import ErrorMessage from "@/modules/checkout/components/error-message"
+import { SubmitButton } from "@/modules/checkout/components/submit-button"
+import Button from "@/modules/common/components/button"
+import Input from "@/modules/common/components/input"
 import { Checkbox, Text } from "@medusajs/ui"
-import Input from "@modules/common/components/input"
-import ErrorMessage from "@modules/checkout/components/error-message"
-import { SubmitButton } from "@modules/checkout/components/submit-button"
-import { login } from "@lib/data/customer"
-import Button from "@modules/common/components/button"
+import { useActionState } from "react"
 
 type Props = {
   setCurrentView: (view: LOGIN_VIEW) => void
 }
 
 const Login = ({ setCurrentView }: Props) => {
-  const [message, formAction] = useFormState(login, null)
+  const [message, formAction] = useActionState(login, null)
 
   return (
     <div
-      className="max-w-sm w-full flex flex-col gap-6"
+      className="max-w-sm w-full h-full flex flex-col justify-center gap-6 my-auto"
       data-testid="login-page"
     >
       <Text className="text-4xl text-neutral-950 text-left">
@@ -34,14 +34,12 @@ const Login = ({ setCurrentView }: Props) => {
             autoComplete="email"
             required
             data-testid="email-input"
-            className="!bg-white"
           />
           <Input
             label="Password"
             name="password"
             type="password"
             autoComplete="current-password"
-            className="!bg-white"
             required
             data-testid="password-input"
           />

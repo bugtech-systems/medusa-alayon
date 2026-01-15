@@ -1,11 +1,11 @@
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@/lib/util/money"
+import LocalizedClientLink from "@/modules/common/components/localized-client-link"
+import CalendarIcon from "@/modules/common/icons/calendar"
+import DocumentIcon from "@/modules/common/icons/document"
 import { HttpTypes } from "@medusajs/types"
 import { Button, clx, Container } from "@medusajs/ui"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Image from "next/image"
 import { useMemo } from "react"
-import CalendarIcon from "../../../common/icons/calendar"
-import DocumentIcon from "../../../common/icons/document"
 
 type OrderCardProps = {
   order: HttpTypes.StoreOrder
@@ -25,7 +25,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
     <>
       <Container className="bg-white flex small:flex-row flex-col p-4 rounded-md small:justify-between small:items-center gap-y-2 items-start">
         <div className="flex gap-x-4 items-center pl-3">
-          <div className="flex">
+          <div className="flex min-w-10">
             {order.items?.slice(0, 3).map((i, index) => {
               const numItems = order.items?.length ?? 0
 
@@ -68,8 +68,11 @@ const OrderCard = ({ order }: OrderCardProps) => {
             data-testid="order-created-at"
           >
             <CalendarIcon className="inline-block mr-1" />
-            {createdAt.getDate()}-{createdAt.getMonth()}-
-            {createdAt.getFullYear()}
+            {createdAt.toLocaleDateString("en-GB", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            })}
           </div>
 
           <div className="flex items-center text-small-regular">

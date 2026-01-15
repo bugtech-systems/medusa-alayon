@@ -1,23 +1,26 @@
-import { getCustomer } from "@lib/data/customer"
-import { checkSpendingLimit } from "@lib/util/check-spending-limit"
+import { retrieveCustomer } from "@/lib/data/customer"
+import ItemsPreviewTemplate from "@/modules/cart/templates/preview"
+import CheckoutTotals from "@/modules/checkout/components/checkout-totals"
+import PromotionCode from "@/modules/checkout/components/promotion-code"
+import Review from "@/modules/checkout/components/review"
+import Divider from "@/modules/common/components/divider"
+import { B2BCart } from "@/types"
 import { Container } from "@medusajs/ui"
-import ItemsPreviewTemplate from "@modules/cart/templates/preview"
-import Review from "@modules/checkout/components/review"
-import CartTotals from "@modules/common/components/cart-totals"
-import Divider from "@modules/common/components/divider"
-import { B2BCart } from "types/global"
 
 const CheckoutSummary = async ({ cart }: { cart: B2BCart }) => {
-  const customer = await getCustomer()
-  const spendLimitExceeded = checkSpendingLimit(cart, customer)
+  const customer = await retrieveCustomer()
 
   return (
     <Container className="sticky top-2 h-fit w-full flex flex-col small:mt-10">
-      <ItemsPreviewTemplate items={cart?.items} />
+      <ItemsPreviewTemplate
+        items={cart?.items}
+        currencyCode={cart.currency_code}
+      />
       <Divider className="my-2" />
-      <CartTotals totals={cart} />
-      {/* <DiscountCode cart={cart} /> */}
-      <Review cart={cart} spendLimitExceeded={spendLimitExceeded} />
+      <CheckoutTotals cartOrOrder={cart} />
+      <PromotionCode cart={cart} />
+      <Divider className="my-2" />
+      <Review cart={cart} customer={customer} />
     </Container>
   )
 }

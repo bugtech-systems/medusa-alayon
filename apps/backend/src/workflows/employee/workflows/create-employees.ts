@@ -1,11 +1,11 @@
+import { createRemoteLinkStep } from '@medusajs/core-flows';
+import { Modules } from "@medusajs/framework/utils";
 import { when } from "@medusajs/framework/workflows-sdk";
 import { createWorkflow, WorkflowResponse } from "@medusajs/workflows-sdk";
-import { ModuleCreateEmployee, ModuleEmployee } from "@starter/types";
-import {
-  createEmployeesStep,
-  linkEmployeeToCustomerStep,
-  setAdminRoleStep,
-} from "../steps";
+import { COMPANY_MODULE } from "../../../modules/company";
+import { ModuleCreateEmployee, ModuleEmployee } from "../../../types";
+import { createEmployeesStep, setAdminRoleStep } from "../steps";
+import { addEmployeeToCustomerGroupStep } from "../steps/add-employee-to-customer-group";
 
 type WorkflowInput = {
   employeeData: ModuleCreateEmployee;
@@ -17,15 +17,26 @@ export const createEmployeesWorkflow = createWorkflow(
   function (input: WorkflowInput): WorkflowResponse<ModuleEmployee> {
     const employee = createEmployeesStep(input.employeeData);
 
-    linkEmployeeToCustomerStep({
-      employeeId: employee.id,
-      customerId: input.customerId,
+    createRemoteLinkStep([
+      {
+        [COMPANY_MODULE]: {
+          employee_id: employee.id,
+        },
+        [Modules.CUSTOMER]: {
+          customer_id: input.customerId,
+        },
+      },
+    ]);
+
+    when(input.employeeData, (employee) => !!employee.is_admin).then(() => {
+      setAdminRoleStep({
+        employeeId: employee.id,
+        customerId: input.customerId,
+      });
     });
 
-    when(employee, ({ is_admin }) => {
-      return !!is_admin;
-    }).then(() => {
-      setAdminRoleStep({ employeeId: employee.id });
+    addEmployeeToCustomerGroupStep({
+      employee_id: employee.id,
     });
 
     return new WorkflowResponse(employee);

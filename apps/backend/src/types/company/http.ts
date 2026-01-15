@@ -32,8 +32,10 @@ export type AdminCreateCompany = {
   zip: string | null;
   country: string | null;
   logo_url: string | null;
-  currency_code: string;
+  currency_code: string | null;
 };
+
+export type AdminUpdateCompany = Partial<AdminCreateCompany>;
 
 /* Employee */
 
@@ -49,7 +51,10 @@ export type AdminCreateEmployee = {
   spending_limit: number;
   is_admin: boolean;
   company_id: string;
+  customer_id: string;
 };
+
+export type AdminUpdateEmployee = Partial<AdminCreateEmployee>;
 
 /* Store */
 

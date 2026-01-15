@@ -1,14 +1,10 @@
-import { Metadata } from "next"
-
-import { getCustomer } from "@lib/data/customer"
-import { listRegions } from "@lib/data/regions"
-import { HttpTypes } from "@medusajs/types"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { listRegions } from "@/lib/data/regions"
+import ProfileCard from "@/modules/account/components/profile-card"
+import SecurityCard from "@/modules/account/components/security-card"
 import { Heading } from "@medusajs/ui"
-import ProfileCard from "@modules/account/components/profile-card"
-import SecurityCard from "@modules/account/components/security-card"
-import { QueryEmployee } from "@starter/types"
+import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { B2BCustomer } from "types/global"
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -16,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Profile() {
-  const customer = await getCustomer()
+  const customer = await retrieveCustomer()
   const regions = await listRegions()
 
   if (!customer || !regions) {

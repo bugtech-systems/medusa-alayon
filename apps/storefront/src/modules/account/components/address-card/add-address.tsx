@@ -1,24 +1,22 @@
 "use client"
 
+import { addCustomerAddress } from "@/lib/data/customer"
+import useToggleState from "@/lib/hooks/use-toggle-state"
+import CountrySelect from "@/modules/checkout/components/country-select"
+import { SubmitButton } from "@/modules/checkout/components/submit-button"
+import Button from "@/modules/common/components/button"
+import Input from "@/modules/common/components/input"
+import Modal from "@/modules/common/components/modal"
 import { Plus } from "@medusajs/icons"
-import { Heading } from "@medusajs/ui"
-import Button from "@modules/common/components/button"
-import { useEffect, useState } from "react"
-import { useFormState } from "react-dom"
-
-import useToggleState from "@lib/hooks/use-toggle-state"
-import CountrySelect from "@modules/checkout/components/country-select"
-import Input from "@modules/common/components/input"
-import Modal from "@modules/common/components/modal"
-import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { HttpTypes } from "@medusajs/types"
-import { addCustomerAddress } from "@lib/data/customer"
+import { Heading } from "@medusajs/ui"
+import { useActionState, useEffect, useState } from "react"
 
 const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
   const [successState, setSuccessState] = useState(false)
   const { state, open, close: closeModal } = useToggleState(false)
 
-  const [formState, formAction] = useFormState(addCustomerAddress, {
+  const [formState, formAction] = useActionState(addCustomerAddress, {
     success: false,
     error: null,
   })

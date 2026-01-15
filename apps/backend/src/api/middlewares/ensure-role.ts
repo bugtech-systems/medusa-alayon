@@ -15,11 +15,23 @@ export const ensureRole = (role: string) => {
     const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
+      data: [company],
+    } = await query.graph({
+      entity: "companies",
+      fields: ["id", "employees.id"],
+      filters: { id: req.params.id },
+    });
+
+    if (company?.employees?.length === 0) {
+      return next();
+    }
+
+    const {
       data: [providerIdentity],
     } = await query.graph({
       entity: "provider_identity",
       fields: ["id", "user_metadata"],
-      filters: { auth_identity_id },
+      filters: { auth_identity_id } as any,
     });
 
     if (providerIdentity.user_metadata?.role === role) {

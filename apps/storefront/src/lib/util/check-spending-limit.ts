@@ -1,11 +1,12 @@
-import { HttpTypes } from "@medusajs/types"
 import {
+  B2BCart,
+  B2BCustomer,
   ModuleCompanySpendingLimitResetFrequency,
-  QueryCompany,
-} from "@starter/types"
-import { B2BCart, B2BCustomer } from "types/global"
+} from "@/types"
+import { HttpTypes } from "@medusajs/types"
 
-export function getSpendWindow(company: QueryCompany): {
+// TODO: Fix type as part of moving all types to a dedicated workspace package
+export function getSpendWindow(company: any): {
   start: Date
   end: Date
 } {
@@ -51,6 +52,13 @@ export function checkSpendingLimit(
   customer: B2BCustomer | null
 ) {
   if (!cart || !customer || !customer.employee) {
+    return false
+  }
+
+  if (
+    !customer?.employee?.spending_limit ||
+    customer?.employee?.spending_limit === 0
+  ) {
     return false
   }
 

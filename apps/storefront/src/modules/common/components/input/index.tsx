@@ -1,8 +1,8 @@
 import { clx, Label } from "@medusajs/ui"
 import React, { useEffect, useImperativeHandle, useState } from "react"
 
-import Eye from "@modules/common/icons/eye"
-import EyeOff from "@modules/common/icons/eye-off"
+import Eye from "@/modules/common/icons/eye"
+import EyeOff from "@/modules/common/icons/eye-off"
 
 type InputProps = Omit<
   Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
@@ -48,7 +48,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     useImperativeHandle(ref, () => inputRef.current!)
 
     return (
-      <div className={`flex flex-col w-full ${className}`}>
+      <div className={`flex flex-col w-full`}>
         {topLabel && (
           <Label className="mb-2 txt-compact-medium-plus">{topLabel}</Label>
         )}

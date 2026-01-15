@@ -1,8 +1,8 @@
 "use client"
 
-import { Container, Text, Toaster, toast } from "@medusajs/ui"
-import Button from "@modules/common/components/button"
-import { B2BCustomer } from "types/global"
+import Button from "@/modules/common/components/button"
+import { B2BCustomer } from "@/types"
+import { Container, Text, toast } from "@medusajs/ui"
 
 const SecurityCard = ({ customer }: { customer: B2BCustomer }) => {
   return (
@@ -24,7 +24,6 @@ const SecurityCard = ({ customer }: { customer: B2BCustomer }) => {
           </Button>
         </div>
       </Container>
-      <Toaster />
     </div>
   )
 }

@@ -11,7 +11,7 @@ export const adminCompanyFields = [
   "zip",
   "country",
   "currency_code",
-  "employees.*",
+  "*employees",
 ];
 
 export const adminCompanyQueryConfig = {
@@ -31,9 +31,9 @@ export const adminEmployeeFields = [
   "spending_limit",
   "is_admin",
   "customer_id",
-  "customer.*",
+  "*customer",
   "company_id",
-  "company.*",
+  "*company",
 ];
 
 export const adminEmployeeQueryConfig = {
@@ -43,6 +43,26 @@ export const adminEmployeeQueryConfig = {
   },
   retrieve: {
     defaults: adminEmployeeFields,
+    isList: false,
+  },
+};
+
+/* Approval Settings Query Config */
+export const adminApprovalSettingsFields = [
+  "id",
+  "company_id",
+  "requires_admin_approval",
+  "requires_sales_manager_approval",
+  "*company",
+];
+
+export const adminApprovalSettingsQueryConfig = {
+  list: {
+    defaults: adminApprovalSettingsFields,
+    isList: true,
+  },
+  retrieve: {
+    defaults: adminApprovalSettingsFields,
     isList: false,
   },
 };

@@ -1,18 +1,18 @@
 "use client"
 
-import { RadioGroup } from "@headlessui/react"
-import { setShippingMethod } from "@lib/data/cart"
-import { convertToLocale } from "@lib/util/money"
+import { setShippingMethod } from "@/lib/data/cart"
+import { convertToLocale } from "@/lib/util/money"
+import ErrorMessage from "@/modules/checkout/components/error-message"
+import Button from "@/modules/common/components/button"
+import Divider from "@/modules/common/components/divider"
+import Radio from "@/modules/common/components/radio"
+import { ApprovalStatusType, B2BCart } from "@/types"
+import { RadioGroup, Radio as RadioGroupOption } from "@headlessui/react"
 import { CheckCircleSolid } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { Container, Heading, Text, clx } from "@medusajs/ui"
-import ErrorMessage from "@modules/checkout/components/error-message"
-import Button from "@modules/common/components/button"
-import Divider from "@modules/common/components/divider"
-import Radio from "@modules/common/components/radio"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { B2BCart } from "types/global"
 
 type ShippingProps = {
   cart: B2BCart
@@ -32,17 +32,20 @@ const Shipping: React.FC<ShippingProps> = ({
 
   const isOpen = searchParams.get("step") === "delivery"
 
+  const cartApprovalStatus = cart?.approval_status?.status
+
   const selectedShippingMethod = availableShippingMethods?.find(
-    // To do: remove the previously selected shipping method instead of using the last one
     (method) => method.id === cart.shipping_methods?.at(-1)?.shipping_option_id
   )
+
+  const selectedMethodId = selectedShippingMethod?.id || ""
 
   const handleEdit = () => {
     router.push(pathname + "?step=delivery", { scroll: false })
   }
 
   const handleSubmit = () => {
-    router.push(pathname + "?step=payment", { scroll: false })
+    router.push(pathname + "?step=contact-details", { scroll: false })
   }
 
   const set = async (id: string) => {
@@ -79,7 +82,8 @@ const Shipping: React.FC<ShippingProps> = ({
           {!isOpen &&
             cart?.shipping_address &&
             cart?.billing_address &&
-            cart?.email && (
+            cart?.email &&
+            cartApprovalStatus !== ApprovalStatusType.PENDING && (
               <Text>
                 <button
                   onClick={handleEdit}
@@ -98,39 +102,36 @@ const Shipping: React.FC<ShippingProps> = ({
       {isOpen ? (
         <div data-testid="delivery-options-container">
           <div className="">
-            <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
-              {availableShippingMethods?.map((option) => {
-                return (
-                  <>
-                    <RadioGroup.Option
-                      key={option.id}
-                      value={option.id}
-                      data-testid="delivery-option-radio"
-                      className={clx(
-                        "flex items-center justify-between text-small-regular cursor-pointer py-2",
-                        {
-                          "border-ui-border-interactive":
-                            option.id === selectedShippingMethod?.id,
-                        }
-                      )}
-                    >
-                      <div className="flex items-center gap-x-4">
-                        <Radio
-                          checked={option.id === selectedShippingMethod?.id}
-                        />
-                        <span className="text-base-regular">{option.name}</span>
-                      </div>
-                      <span className="justify-self-end text-ui-fg-base">
-                        {convertToLocale({
-                          amount: option.amount!,
-                          currency_code: cart?.currency_code,
-                        })}
-                      </span>
-                    </RadioGroup.Option>
-                    <Divider />
-                  </>
-                )
-              })}
+            <RadioGroup value={selectedMethodId} onChange={set}>
+              {availableShippingMethods?.map((option) => (
+                <div key={option.id}>
+                  <RadioGroupOption
+                    value={option.id}
+                    data-testid="delivery-option-radio"
+                    className={clx(
+                      "flex items-center justify-between text-small-regular cursor-pointer py-2",
+                      {
+                        "border-ui-border-interactive":
+                          option.id === selectedShippingMethod?.id,
+                      }
+                    )}
+                  >
+                    <div className="flex items-center gap-x-4">
+                      <Radio
+                        checked={option.id === selectedShippingMethod?.id}
+                      />
+                      <span className="text-base-regular">{option.name}</span>
+                    </div>
+                    <span className="justify-self-end text-ui-fg-base">
+                      {convertToLocale({
+                        amount: option.amount!,
+                        currency_code: cart?.currency_code,
+                      })}
+                    </span>
+                  </RadioGroupOption>
+                  <Divider />
+                </div>
+              ))}
             </RadioGroup>
           </div>
           <div className="flex flex-col gap-y-2 items-end">

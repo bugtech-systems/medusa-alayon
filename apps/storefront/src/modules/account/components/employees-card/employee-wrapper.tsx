@@ -1,8 +1,7 @@
-import { listOrders } from "@lib/data/orders"
-import { HttpTypes } from "@medusajs/types"
-import { QueryCompany, QueryEmployee } from "@starter/types"
-import Employee from "./employee"
-import { getCustomer } from "@lib/data/customer"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { listOrders } from "@/lib/data/orders"
+import Employee from "@/modules/account/components/employees-card/employee"
+import { QueryCompany, QueryEmployee } from "@/types"
 
 const EmployeeWrapper = async ({
   employee,
@@ -11,9 +10,9 @@ const EmployeeWrapper = async ({
   employee: QueryEmployee
   company: QueryCompany
 }) => {
-  const customer = await getCustomer()
-  // @ts-expect-error
-  const orderIds = employee.customer.orders.map((order) => order.id)
+  const customer = await retrieveCustomer()
+  const customerOrders = await listOrders()
+  const orderIds = customerOrders.map((order) => order.id)
 
   const orders =
     orderIds.length > 0
