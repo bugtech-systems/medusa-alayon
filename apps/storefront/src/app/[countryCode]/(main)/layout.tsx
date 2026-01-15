@@ -30,15 +30,15 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
         <div className="flex flex-col small:flex-row small:gap-2 gap-1 items-center">
           <span className="flex items-center gap-1">
             <ExclamationCircleSolid className="inline" color="#A1A1AA" />
-            Build your own B2B store with this starter:
+            Build your own B2B store here:
           </span>
 
           <a
             className="group hover:text-ui-fg-interactive-hover text-ui-fg-interactive self-end small:self-auto"
-            href="https://git.new/b2b-starter-repo"
+            href="/admin/login"
             target="_blank"
           >
-            GitHub Repo
+            Login as Merchant
             <ArrowUpRightMini className="group-hover:text-ui-fg-interactive-hover inline text-ui-fg-interactive" />
           </a>
         </div>

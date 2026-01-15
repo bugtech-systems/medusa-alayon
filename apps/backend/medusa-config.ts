@@ -41,15 +41,15 @@ export default defineConfig({
     [Modules.WORKFLOW_ENGINE]: {
       resolve: "@medusajs/medusa/workflow-engine-inmemory",
     },
-    [Modules.FULFILLMENT]: {
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/fulfillment-manual",
-            id: "manual-provider",
-          },
-        ],
-      },
-    },
+    // [Modules.FULFILLMENT]: {
+    //   options: {
+    //     providers: [
+    //       {
+    //         resolve: "@medusajs/fulfillment-manual",
+    //         id: "manual-provider",
+    //       },
+    //     ],
+    //   },
+    // },
   },
 });
