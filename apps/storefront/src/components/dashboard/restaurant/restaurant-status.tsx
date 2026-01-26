@@ -1,20 +1,20 @@
 "use client";
 
-import { setRestaurantStatus } from "@frontend/lib/actions";
-import { RestaurantDTO } from "@frontend/lib/types";
+import { setRestaurantStatus } from "@/lib/actions";
+import { CompanyDTO } from "@/lib/types";
 import { Switch } from "@medusajs/ui";
 import { useState } from "react";
 
 export default function RestaurantStatus({
-  restaurant,
+  company,
 }: {
-  restaurant: RestaurantDTO;
+  company: CompanyDTO;
 }) {
-  const [isOpen, setIsOpen] = useState(restaurant.is_open);
+  const [isOpen, setIsOpen] = useState(company.is_open);
 
   const handleStatusChange = async () => {
     setIsOpen(!isOpen);
-    await setRestaurantStatus(restaurant.id, !isOpen);
+    await setRestaurantStatus(company.id, !isOpen);
   };
 
   return (

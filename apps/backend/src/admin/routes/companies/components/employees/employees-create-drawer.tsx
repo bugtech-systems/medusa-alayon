@@ -1,10 +1,11 @@
 import { HttpTypes } from "@medusajs/types";
 import { Button, Drawer, toast } from "@medusajs/ui";
-import { AdminCreateEmployee, QueryCompany } from "../../../../../types";
+import { AdminCreateEmployee, QueryCompany } from "@/types1";
 import { useState } from "react";
 import {
   useAdminCreateCustomer,
   useCreateEmployee,
+  useCustomers,
 } from "../../../../hooks/api";
 import { EmployeesCreateForm } from "./employees-create-form";
 
@@ -23,9 +24,15 @@ export function EmployeeCreateDrawer({ company }: { company: QueryCompany }) {
     error: createCustomerError,
   } = useAdminCreateCustomer();
 
+
+
   const handleSubmit = async (
     formData: AdminCreateEmployee & HttpTypes.AdminCreateCustomer
   ) => {
+  
+  console.log(company, 'COMPANY')
+
+  
     const { customer } = await createCustomer({
       email: formData.email!,
       first_name: formData.first_name!,
@@ -34,6 +41,8 @@ export function EmployeeCreateDrawer({ company }: { company: QueryCompany }) {
       company_name: company.name,
     });
 
+
+console.log(customer, 'CUSTOMER')
     if (!customer?.id) {
       toast.error("Failed to create customer");
       return;
@@ -42,7 +51,7 @@ export function EmployeeCreateDrawer({ company }: { company: QueryCompany }) {
     const employee = await createEmployee({
       spending_limit: formData.spending_limit!,
       is_admin: formData.is_admin!,
-      customer_id: customer.id,
+      customer_id: customer.id
     });
 
     if (!employee) {

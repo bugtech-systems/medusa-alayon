@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react"
 
 const CategoryList = ({
   categories,
-  currentCategory,
+  currentCategory
 }: {
   categories: HttpTypes.StoreProductCategory[]
   currentCategory?: HttpTypes.StoreProductCategory
@@ -44,10 +44,8 @@ const CategoryList = ({
   }
 
   const searchParams = useSearchParams()
-
   const isCurrentCategory = (handle: string) =>
-    pathname.split("/").slice(2).join("/") === `categories/${handle}`
-
+    pathname.split("/").slice(2).join("/") === `categories/${handle}`;
   useEffect(() => {
     if (currentCategory) {
       const categoriesToExpand = getCategoriesToExpand(currentCategory)
@@ -106,7 +104,7 @@ const CategoryList = ({
               href={`/categories/${category.handle}${
                 searchParams.size ? `?${searchParams.toString()}` : ""
               }`}
-              className="flex gap-2 items-center hover:text-neutral-700 text-start hover:cursor-pointer"
+              className="flex gap-2 items-center hover:text-neutral-700 text-start hover:cursor-pointer text-xs"
             >
               <Radio checked={isCurrentCategory(category.handle)} />
               {category.name} ({category.products?.length})

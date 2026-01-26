@@ -3,8 +3,9 @@ import { loadEnv, defineConfig, Modules } from "@medusajs/framework/utils";
 import { QUOTE_MODULE } from "./src/modules/quote";
 import { COMPANY_MODULE } from "./src/modules/company";
 import { APPROVAL_MODULE } from './src/modules/approval';
-import { RESTAURANT_MODULE } from "src/modules/restaurant";
-import { DELIVERY_MODULE } from "src/modules/delivery";
+import { DELIVERY_MODULE } from "src/modules/delivery/index";
+import { AIMODEL_MODULE } from "@/modules/aimodels";
+
 
 loadEnv(process.env.NODE_ENV as any, process.cwd());
 
@@ -23,9 +24,6 @@ export default defineConfig({
     [DELIVERY_MODULE]: {
       resolve: "./modules/delivery",
     },
-    [RESTAURANT_MODULE]: {
-      resolve: "./modules/restaurant",
-    },
     [APPROVAL_MODULE]: {
       resolve: "./modules/approval",
     },
@@ -35,21 +33,24 @@ export default defineConfig({
     [QUOTE_MODULE]: {
       resolve: "./modules/quote",
     },
+    [AIMODEL_MODULE]: {
+      resolve: "./modules/aimodels",
+    },
     [Modules.CACHE]: {
       resolve: "@medusajs/medusa/cache-inmemory",
     },
     [Modules.WORKFLOW_ENGINE]: {
       resolve: "@medusajs/medusa/workflow-engine-inmemory",
     },
-    // [Modules.FULFILLMENT]: {
-    //   options: {
-    //     providers: [
-    //       {
-    //         resolve: "@medusajs/fulfillment-manual",
-    //         id: "manual-provider",
-    //       },
-    //     ],
-    //   },
-    // },
+    [Modules.FULFILLMENT]: {
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/fulfillment-manual",
+            id: "manual-provider",
+          },
+        ],
+      },
+    }
   },
 });

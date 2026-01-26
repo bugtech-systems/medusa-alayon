@@ -2,15 +2,15 @@ import {
   DeliveryDTO,
   DeliveryStatus,
   DriverDTO,
-  RestaurantDTO,
-} from "@frontend/lib/types";
+  CompanyDTO,
+} from "@/lib/types";
 import { Badge, Text } from "@medusajs/ui";
 import Image from "next/image";
 
 const BACKEND_URL =
   process.env.BACKEND_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:9000";
+  "http://localhost:9001";
 
 async function getDeliveries(query: string) {
   const { deliveries } = await fetch(
@@ -28,8 +28,8 @@ export default async function AccountBadge({
   data,
   type,
 }: {
-  data: DriverDTO | RestaurantDTO;
-  type: "driver" | "restaurant";
+  data: DriverDTO | CompanyDTO;
+  type: "driver" | "company";
 }) {
   let name = "";
 
@@ -38,8 +38,8 @@ export default async function AccountBadge({
     name = driver.first_name + " " + driver.last_name;
   }
 
-  if (type === "restaurant") {
-    const restaurant = data as RestaurantDTO;
+  if (type === "company") {
+    const restaurant = data as CompanyDTO;
     name = restaurant.name;
   }
 

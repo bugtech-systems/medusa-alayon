@@ -19,15 +19,10 @@ export default function Footer() {
             height={15}
             width={15}
           />
-          Medusa
+          Alayon
         </Link>
         |
-        <Link
-          href="https://github.com/medusajs/medusa-eats"
-          className="flex gap-1 items-center hover:text-ui-bg-base-hover"
-        >
-          GitHub repository
-        </Link>
+       LGM
       </Text>
     </footer>
   );

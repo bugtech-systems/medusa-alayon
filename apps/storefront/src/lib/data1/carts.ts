@@ -9,8 +9,8 @@ export async function retrieveCart(cartId: string) {
         "+metadata, +items.*, +items.thumbnail, +items.title, +items.quantity, +items.total, +items.variant",
     },
     {
-      ...getAuthHeaders(),
-      ...getCacheHeaders("carts"),
+      ...(await getAuthHeaders()),
+      ...(await getCacheHeaders("carts")),
     }
   );
 

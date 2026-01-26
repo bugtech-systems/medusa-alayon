@@ -1,4 +1,4 @@
-import { DeliveryDTO, DriverDTO } from "@frontend/lib/types";
+import { DeliveryDTO, DriverDTO } from "@/lib/types";
 import { Container, Heading, Table } from "@medusajs/ui";
 import DriverDeliveryButtons from "./driver/delivery-buttons";
 import { DriverDeliveryStatusBadge } from "./driver/delivery-status-badge";
@@ -12,7 +12,7 @@ export default async function DeliveryCard({
 }: {
   delivery: DeliveryDTO;
   driver?: DriverDTO;
-  type: "restaurant" | "driver";
+  type: "company" | "driver";
 }) {
   if (!delivery || delivery === null) return null;
 
@@ -25,7 +25,7 @@ export default async function DeliveryCard({
           Order {delivery?.id?.slice(-4)}
         </Heading>
         {type === "driver" && <DriverDeliveryStatusBadge delivery={delivery} />}
-        {type === "restaurant" && (
+        {type === "company" && (
           <RestaurantDeliveryStatusBadge delivery={delivery} />
         )}
       </div>
@@ -53,7 +53,7 @@ export default async function DeliveryCard({
         {type === "driver" && driver && (
           <DriverDeliveryButtons delivery={delivery} driver={driver} />
         )}
-        {type === "restaurant" && (
+        {type === "company" && (
           <RestaurantDeliveryButtons delivery={delivery} />
         )}
       </div>

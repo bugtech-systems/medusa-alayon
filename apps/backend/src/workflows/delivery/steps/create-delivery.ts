@@ -6,13 +6,13 @@ export const createDeliveryStepId = "create-delivery-step";
 export const createDeliveryStep = createStep(
   createDeliveryStepId,
   async function ({}, { container }) {
-    const service = container.resolve(DELIVERY_MODULE);
-
+    const service = container.resolve(DELIVERY_MODULE) as any;
+    
     const delivery = await service.createDeliveries({}) as DeliveryDTO
 
     return new StepResponse(delivery, {
       delivery_id: delivery.id,
-    });
+    }) as any;
   },
   async function (
     {

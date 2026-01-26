@@ -11,6 +11,6 @@ export {
   deleteDeliveryDriversStepId,
 } from "./delete-delivery-drivers";
 export * from "./find-driver";
-export * from "./notify-restaurant";
+export * from "./notify-company";
 export * from "./set-transaction-id";
 export * from "./update-delivery";

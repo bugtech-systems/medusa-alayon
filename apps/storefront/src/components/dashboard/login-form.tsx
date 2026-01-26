@@ -33,7 +33,7 @@ function DefaultLoginForm() {
               <Select.Value placeholder="Select role" />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="restaurant">Restaurant</Select.Item>
+              <Select.Item value="company">Merchant</Select.Item>
               <Select.Item value="driver">Driver</Select.Item>
             </Select.Content>
           </Select>
@@ -41,7 +41,7 @@ function DefaultLoginForm() {
       </div>
 
       <div className="flex justify-between">
-        <Link href="/signup">
+        <Link href="/admin/signup">
           <Button variant="transparent" size="large">
             Create account
           </Button>

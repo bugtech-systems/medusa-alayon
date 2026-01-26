@@ -53,18 +53,16 @@ const Summary = ({ customer, spendLimitExceeded }: SummaryProps) => {
         </div>
       )}
       <LocalizedClientLink
-        href={checkoutButtonLink}
+        href={checkoutPath}
         data-testid="checkout-button"
       >
         <Button
           className="w-full h-10 rounded-full shadow-none"
           disabled={spendLimitExceeded}
         >
-          {customer
-            ? spendLimitExceeded
+          { spendLimitExceeded
               ? "Spending Limit Exceeded"
-              : "Checkout"
-            : "Log in to Checkout"}
+              : "Checkout"}
         </Button>
       </LocalizedClientLink>
       {!!customer && (

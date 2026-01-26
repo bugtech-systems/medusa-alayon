@@ -1,8 +1,8 @@
 "use client";
 
-import { DeliveryDTO } from "@frontend/lib/types";
-import { lottieMap } from "@frontend/lib/util/constants";
-import { getNumericStatus } from "@frontend/lib/util/get-numeric-status";
+import { DeliveryDTO } from "@/lib/types";
+import { lottieMap } from "@/lib/util/constants";
+import { getNumericStatus } from "@/lib/util/get-numeric-status";
 import {
   CheckCircleSolid,
   CircleDottedLine,

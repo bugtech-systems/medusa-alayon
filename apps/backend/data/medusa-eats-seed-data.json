@@ -1,11 +1,11 @@
 {
-  "restaurant": {
+  "merchant": {
     "name": "Rufrance LPG Trading",
     "handle": "rufrance-lpg",
-    "address": "Barangay San Isidro, Quezon City, Metro Manila, Philippines",
+    "address": "Barangay Baras, Palo Leyte, Philippines",
     "email": "sales@rufrancelpg.ph",
     "phone": "+63 917 123 4567",
-    "image_url": "/rufrance-lpg-banner.jpg",
+    "logo_url": "/rufrance-lpg-banner.jpg",
     "is_open": true
   },
   "categories": [
@@ -41,11 +41,11 @@
       "variants": [
         {
           "title": "Standard Canister",
-          "manage_inventory": true,
+          "manage_inventory": false,
           "sku": "RFLPG-CAN-37",
           "prices": [
             {
-              "amount": 3700,
+              "amount": 37,
               "currency_code": "php"
             }
           ]
@@ -64,11 +64,11 @@
       "variants": [
         {
           "title": "Premium Canister",
-          "manage_inventory": true,
+          "manage_inventory": false,
           "sku": "RFLPG-CAN-42",
           "prices": [
             {
-              "amount": 4200,
+              "amount": 42,
               "currency_code": "php"
             }
           ]
@@ -87,11 +87,11 @@
       "variants": [
         {
           "title": "Portable Cylinder",
-          "manage_inventory": true,
+          "manage_inventory": false,
           "sku": "RFLPG-PORT-399",
           "prices": [
             {
-              "amount": 39900,
+              "amount": 399,
               "currency_code": "php"
             }
           ]
@@ -110,11 +110,11 @@
       "variants": [
         {
           "title": "5kg Cylinder",
-          "manage_inventory": true,
+          "manage_inventory": false,
           "sku": "RFLPG-5KG-1199",
           "prices": [
             {
-              "amount": 119900,
+              "amount": 1199,
               "currency_code": "php"
             }
           ]
@@ -133,11 +133,11 @@
       "variants": [
         {
           "title": "11kg Cylinder",
-          "manage_inventory": true,
+          "manage_inventory": false,
           "sku": "RFLPG-11KG-1999",
           "prices": [
             {
-              "amount": 199900,
+              "amount": 1999,
               "currency_code": "php"
             }
           ]

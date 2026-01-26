@@ -1,4 +1,4 @@
-import { ApprovalStatusType } from "../../../../../types/approval";
+import { ApprovalStatusType } from "../../../../../types1/approval";
 
 export const useApprovalsTableFilters = () => {
   const filters: any[] = [

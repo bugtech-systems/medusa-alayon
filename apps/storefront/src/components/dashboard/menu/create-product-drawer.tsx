@@ -1,16 +1,16 @@
 "use client";
 
-import { RestaurantDTO } from "@/lib/types";
+import { CompanyDTO } from "@/lib/types";
 import { Plus } from "@medusajs/icons";
 import { HttpTypes } from "@medusajs/types";
 import { Button, Drawer, Text } from "@medusajs/ui";
 import { CreateProductForm } from "./create-product-form";
 
 export function CreateProductDrawer({
-  restaurant,
+  company,
   categories,
 }: {
-  restaurant: RestaurantDTO;
+  company: CompanyDTO;
   categories: HttpTypes.StoreProductCategory[];
 }) {
   return (
@@ -27,9 +27,9 @@ export function CreateProductDrawer({
         </Drawer.Header>
         <Drawer.Body className="p-4">
           <Text>
-            This is where you create a new item for your restaurant&apos;s menu
+            This is where you create a new item for your company&apos;s menu
           </Text>
-          <CreateProductForm restaurant={restaurant} categories={categories} />
+          <CreateProductForm company={company} categories={categories} />
         </Drawer.Body>
         <Drawer.Footer>
           <Drawer.Close asChild>

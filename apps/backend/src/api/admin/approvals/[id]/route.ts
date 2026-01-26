@@ -3,7 +3,7 @@ import {
   MedusaResponse,
 } from "@medusajs/framework";
 import { updateApprovalsWorkflow } from "../../../../workflows/approval/workflows";
-import { AdminUpdateApproval } from "../../../../types/approval/http";
+import { AdminUpdateApproval } from "../../../../types1/approval/http";
 
 export const POST = async (
   req: AuthenticatedMedusaRequest<AdminUpdateApproval>,

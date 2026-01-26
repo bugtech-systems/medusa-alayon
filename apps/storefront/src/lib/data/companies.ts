@@ -17,6 +17,24 @@ import {
 } from "@/types"
 import { track } from "@vercel/analytics/server"
 import { revalidateTag } from "next/cache"
+import { getCacheHeaders } from '../data1/cookies';
+import { CompanyDTO } from "../types"
+
+export const retrieveMerchant = async (
+  companyId: string
+): Promise<CompanyDTO> => {
+  const { company }: { company: CompanyDTO } = await sdk.client.fetch(
+    `/store/merchants/${companyId}`,
+    {
+      method: "GET",
+      headers: {
+        ...getCacheHeaders("merchants"),
+      },
+    }
+  );
+
+  return company;
+}
 
 export const retrieveCompany = async (companyId: string) => {
   const headers = {
@@ -28,7 +46,7 @@ export const retrieveCompany = async (companyId: string) => {
   }
 
   const { company } = await sdk.client.fetch<StoreCompanyResponse>(
-    `/store/companies/${companyId}`,
+    `/store/merchants/${companyId}`,
     {
       query: {
         fields:
@@ -42,6 +60,39 @@ export const retrieveCompany = async (companyId: string) => {
 
   return company
 }
+
+export const listCompanies = async (
+  filter?: Record<string, string>
+): Promise<CompanyDTO[]>  => {
+  const query = new URLSearchParams(filter).toString();
+
+  const { companies }: { companies: CompanyDTO[] } =
+    await sdk.client.fetch(`/store/merchants?${query}`, {
+      method: "GET",
+      headers: {
+        ...getCacheHeaders("companies"),
+      },
+    });
+    
+
+  return companies;
+}
+
+export async function retrieveCompanyByHandle(
+  handle: string
+): Promise<CompanyDTO> {
+  const { companies }: { companies: CompanyDTO[] } =
+    await sdk.client.fetch(`/store/merchants?handle=${handle}`, {
+      method: "GET",
+      headers: {
+        ...getCacheHeaders("companies"),
+      },
+    });
+
+
+  return companies[0];
+}
+
 
 export const createCompany = async (data: StoreCreateCompany) => {
   const headers = {
@@ -88,6 +139,8 @@ export const updateCompany = async (data: StoreUpdateCompany) => {
 
   return company
 }
+
+
 
 export const createEmployee = async (data: StoreCreateEmployee) => {
   const { company_id, ...employeeData } = data

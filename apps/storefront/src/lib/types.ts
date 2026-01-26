@@ -17,7 +17,7 @@ export enum DeliveryStatus {
   DELIVERED = "delivered",
 }
 
-export interface RestaurantDTO {
+export interface CompanyDTO {
   id: string;
   handle: string;
   is_open: boolean;
@@ -26,16 +26,16 @@ export interface RestaurantDTO {
   address: string;
   phone: string;
   email: string;
-  image_url?: string;
+  logo_url?: string;
   created_at: Date;
   updated_at: Date;
   products?: ProductDTO[];
   deliveries: DeliveryDTO[];
 }
 
-export interface RestaurantAdminDTO {
+export interface CompanyEmployeeDTO {
   id: string;
-  restaurant_id: string;
+  company_id: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -43,12 +43,12 @@ export interface RestaurantAdminDTO {
   updated_at: Date;
 }
 
-export interface RestaurantProductDTO {
-  restaurant_id: string;
+export interface CompanyProductDTO {
+  company_id: string;
   product_id: string;
 }
 
-export interface CreateRestaurantDTO {
+export interface CreateCompanyDTO {
   name: string;
   handle: string;
   address: string;
@@ -58,13 +58,13 @@ export interface CreateRestaurantDTO {
   is_open?: boolean;
 }
 
-export type UpdateRestaurantDTO = Partial<CreateRestaurantDTO>;
+export type UpdateCompanyDTO = Partial<CreateCompanyDTO>;
 
-export interface CreateRestaurantAdminDTO {
+export interface CreateCompanyEmployeeDTO {
   email: string;
   first_name: string;
   last_name: string;
-  restaurant_id: string;
+  company_id: string;
 }
 
 export interface CreateAdminInviteDTO {
@@ -79,7 +79,7 @@ export interface DeliveryDTO {
   driver_id?: string;
   cart: CartDTO;
   order?: OrderDTO;
-  restaurant: RestaurantDTO;
+  company: CompanyDTO;
   delivered_at?: Date;
   delivery_status: DeliveryStatus;
   created_at: Date;

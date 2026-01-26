@@ -1,6 +1,6 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import { updateApprovalSettingsWorkflow } from "../../../../../workflows/approval/workflows/update-approval-settings";
+import { updateApprovalSettingsWorkflow } from "@/workflows/approval/workflows/update-approval-settings";
 import { storeApprovalSettingsFields } from "../../query-config";
 import { StoreUpdateApprovalSettingsType } from "../../validators";
 

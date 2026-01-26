@@ -10,7 +10,7 @@ export const updateDeliveryStepId = "update-delivery-step";
 export const updateDeliveryStep = createStep(
   updateDeliveryStepId,
   async function (input: UpdateDeliveryStepInput, { container }) {
-    const deliveryService = container.resolve(DELIVERY_MODULE) as any;
+    const deliveryService = container.resolve(DELIVERY_MODULE);
 
     const delivery = await deliveryService
       .updateDeliveries([input.data])

@@ -21,6 +21,8 @@ export const getAuthHeaders = async (): Promise<
   }
 }
 
+
+
 export const getCacheTag = async (tag: string): Promise<string> => {
   try {
     const cookies = await nextCookies()
@@ -35,6 +37,8 @@ export const getCacheTag = async (tag: string): Promise<string> => {
     return ""
   }
 }
+
+
 
 export const getCacheOptions = async (
   tag: string
@@ -61,6 +65,12 @@ export const setAuthToken = async (token: string) => {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
   })
+}
+
+export const setDeliveryId = async (id: string) => {
+  const cookies = await nextCookies()
+
+  cookies.set("_medusa_delivery_id", id)
 }
 
 export const removeAuthToken = async () => {
@@ -93,3 +103,4 @@ export const removeCartId = async () => {
     maxAge: -1,
   })
 }
+

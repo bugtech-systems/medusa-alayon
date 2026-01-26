@@ -24,7 +24,9 @@ export const GET = async (
     },
     { throwIfKeyNotFound: true }
   );
-
+    
+  console.log(data, 'GET COMPANIES')  
+    
   res.json({ company: data[0] });
 };
 
@@ -33,16 +35,46 @@ export const POST = async (
   res: MedusaResponse
 ) => {
   const { id } = req.params;
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  await updateCompaniesWorkflow.run({
-    input: {
-      id,
-      ...req.body,
+  const query = req.scope.resolve(
+    ContainerRegistrationKeys.QUERY
+  );
+
+  /**
+   * 1. Fetch existing company
+   */
+  const {
+    data: [existingCompany],
+  } = await query.graph(
+    {
+      entity: "companies",
+      fields: ["*"],
+      filters: { id },
     },
+    { throwIfKeyNotFound: true }
+  );
+
+  /**
+   * 2. Merge existing + incoming fields
+   *    Incoming body takes precedence
+   */
+  const mergedPayload = {
+    ...existingCompany,
+    ...req.body,
+    id, // always ensure ID is present
+  };
+
+  /**
+   * 3. Run update workflow
+   */
+  await updateCompaniesWorkflow.run({
+    input: mergedPayload,
     container: req.scope,
   });
 
+  /**
+   * 4. Fetch updated company with requested fields
+   */
   const {
     data: [company],
   } = await query.graph(
@@ -54,7 +86,7 @@ export const POST = async (
     { throwIfKeyNotFound: true }
   );
 
-  res.json({ company });
+  return res.status(200).json({ company });
 };
 
 export const DELETE = async (req: MedusaRequest, res: MedusaResponse) => {

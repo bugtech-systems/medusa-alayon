@@ -23,6 +23,9 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
     freeShippingPrices = await listCartFreeShippingPrices(cart.id)
   }
 
+
+
+
   return (
     <>
       <NavigationHeader />
@@ -36,7 +39,7 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
           <a
             className="group hover:text-ui-fg-interactive-hover text-ui-fg-interactive self-end small:self-auto"
             href="/admin/login"
-            target="_blank"
+            // target="_blank"
           >
             Login as Merchant
             <ArrowUpRightMini className="group-hover:text-ui-fg-interactive-hover inline text-ui-fg-interactive" />

@@ -11,10 +11,13 @@ type ProfileBadgeProps = {
 
 export function ProfileBadge({ user }: ProfileBadgeProps) {
   const dashboardPath = user
-    ? user.hasOwnProperty("restaurant_id")
-      ? "/dashboard/restaurant"
+    ? user.hasOwnProperty("company_id")
+      ? "/dashboard/company"
       : "/dashboard/driver"
-    : "/login";
+    : "/account";
+
+
+console.log(user, 'USSSER')
 
   return (
     <div className="flex flex-col relative group w-fit">
@@ -31,7 +34,7 @@ export function ProfileBadge({ user }: ProfileBadgeProps) {
               </Text>
               <Avatar
                 src={`https://robohash.org/${user.id}?size=40x40&set=set1&bgset=bg1`}
-                fallback={user.first_name[0] + user.last_name[0]}
+                fallback={user?.first_name + user?.last_name}
                 className="bg-ui-bg-base cursor-pointer"
               />
             </>

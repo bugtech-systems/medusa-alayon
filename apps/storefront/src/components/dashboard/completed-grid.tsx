@@ -1,4 +1,4 @@
-import { DeliveryDTO, DeliveryStatus, DriverDTO } from "@frontend/lib/types";
+import { DeliveryDTO, DeliveryStatus, DriverDTO } from "@/lib/types";
 import { Heading } from "@medusajs/ui";
 import DeliveryCard from "./delivery-card";
 
@@ -13,7 +13,7 @@ export default async function CompletedGrid({
   deliveries: DeliveryDTO[];
   statusFilters?: DeliveryStatus[];
   driver?: DriverDTO;
-  type: "restaurant" | "driver";
+  type: "company" | "driver";
 }) {
   return (
     <div className="flex gap-4">

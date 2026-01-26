@@ -24,7 +24,7 @@ export const updateDeliveryWorkflow = createWorkflow(
     // If a stepIdToSucceed is provided, we will set that step as successful
     setStepSuccessStep({
       stepId: input.stepIdToSucceed,
-      updatedDelivery,
+      updatedDelivery: updatedDelivery,
     });
 
     // If a stepIdToFail is provided, we will set that step as failed

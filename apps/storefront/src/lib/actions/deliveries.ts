@@ -1,6 +1,6 @@
 "use server";
 
-import { DeliveryDTO, DeliveryStatus } from "@frontend/lib/types";
+import { DeliveryDTO, DeliveryStatus } from "@/lib/types";
 import { revalidateTag } from "next/cache";
 import { getAuthHeaders, getCacheTag } from "../data/cookies";
 import { sdk } from "../config";
@@ -8,7 +8,7 @@ import { sdk } from "../config";
 const BACKEND_URL =
   process.env.BACKEND_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:9000";
+  "http://localhost:9001";
 
 export async function proceedDelivery(
   delivery: DeliveryDTO,
@@ -54,12 +54,12 @@ export async function claimDelivery(
         method: "POST",
         body: { driver_id: driverId },
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return delivery;
   } catch (error) {
@@ -77,7 +77,7 @@ export async function passDelivery(
       {
         method: "DELETE",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
         body: {
           driver_id: driverId,
@@ -85,7 +85,7 @@ export async function passDelivery(
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return { message: "Delivery passed" };
   } catch (error) {
@@ -102,12 +102,12 @@ export async function pickUpDelivery(
       {
         method: "POST",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return delivery;
   } catch (error) {
@@ -124,7 +124,7 @@ export async function completeDelivery(
       {
         method: "POST",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
@@ -146,12 +146,12 @@ export async function acceptDelivery(
       {
         method: "POST",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return delivery;
   } catch (error) {
@@ -168,12 +168,12 @@ export async function declineDelivery(
       {
         method: "POST",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return delivery;
   } catch (error) {
@@ -190,12 +190,12 @@ export async function prepareDelivery(
       {
         method: "POST",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return delivery;
   } catch (error) {
@@ -212,12 +212,12 @@ export async function preparationReady(
       {
         method: "POST",
         headers: {
-          ...getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
 
-    revalidateTag(getCacheTag("deliveries"));
+    revalidateTag(await getCacheTag("deliveries"));
 
     return delivery;
   } catch (error) {

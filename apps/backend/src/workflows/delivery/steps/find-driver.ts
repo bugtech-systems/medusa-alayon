@@ -44,7 +44,7 @@ export const findDriverStep = createStep<string, DriverDTO, string>(
       },
     });
   },
-  (input, { container }) => {
+  (input: any, { container }) => {
     const deliveryService = container.resolve(DELIVERY_MODULE);
 
     return deliveryService.softDeleteDeliveryDrivers(input);

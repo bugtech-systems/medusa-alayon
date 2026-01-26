@@ -94,6 +94,7 @@ export async function signup(_currentState: unknown, formData: FormData) {
 
     const companyForm = {
       name: formData.get("company_name") as string,
+      handle: customerForm.company_name.toLowerCase().split(' ').join('_'),
       email: formData.get("email") as string,
       phone: formData.get("company_phone") as string,
       address: formData.get("company_address") as string,

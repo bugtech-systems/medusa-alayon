@@ -1,0 +1,39 @@
+import { sdk } from "../config";
+import { DeliveryDTO } from "@/lib/types";
+// import { getAuthHeaders, getCacheOptions } from "./cookies";
+import { getCacheHeaders, getAuthHeaders } from "../data1/cookies";
+
+export async function listDeliveries(
+  filter?: Record<string, string>
+): Promise<DeliveryDTO[]> {
+  const { deliveries }: { deliveries: DeliveryDTO[] } = await sdk.client.fetch(
+    "/store/deliveries",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+        ...getCacheHeaders("deliveries"),
+      },
+    }
+  );
+
+  return deliveries;
+}
+
+export async function retrieveDelivery(
+  deliveryId: string
+): Promise<DeliveryDTO> {
+  const { delivery }: { delivery: DeliveryDTO } = await sdk.client.fetch(
+    `/store/deliveries/${deliveryId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+        ...getCacheHeaders("deliveries"),
+      },
+    }
+  );
+  return delivery;
+}

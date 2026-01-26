@@ -7,7 +7,7 @@ import {
   Text,
 } from "@medusajs/ui";
 import { useState } from "react";
-import { AdminCreateEmployee, QueryCompany } from "../../../../../types";
+import { AdminCreateEmployee, QueryCompany } from "@/types1";
 import { CoolSwitch } from "../../../../components/common";
 import { currencySymbolMap } from "../../../../utils";
 

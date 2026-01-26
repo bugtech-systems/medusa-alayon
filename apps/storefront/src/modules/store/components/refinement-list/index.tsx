@@ -57,6 +57,7 @@ const RefinementList = ({
         <CategoryList
           categories={categories}
           currentCategory={currentCategory}
+          pathname={pathname}
         />
       )}
     </div>

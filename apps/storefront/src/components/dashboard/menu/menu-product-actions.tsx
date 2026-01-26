@@ -1,51 +1,79 @@
 "use client";
 
-import { deleteProduct } from "@frontend/lib/actions";
-import { RestaurantDTO } from "@frontend/lib/types";
+import { deleteProduct } from "@/lib/actions";
+import { CompanyDTO } from "@/lib/types";
 import {
   EllipsisHorizontal,
   PencilSquare,
-  Spinner,
   Trash,
 } from "@medusajs/icons";
-import { ProductDTO } from "@medusajs/types";
-import { DropdownMenu, IconButton } from "@medusajs/ui";
+import { HttpTypes } from "@medusajs/types";
+import {
+  DropdownMenu,
+  IconButton,
+} from "@medusajs/ui";
 import { useState } from "react";
+import { ProductDrawer } from "./product-drawer";
 
 export function MenuProductActions({
   product,
-  restaurant,
+  company,
+  categories,
 }: {
-  product: ProductDTO;
-  restaurant: RestaurantDTO;
+  product: any;
+  company: CompanyDTO;
+  categories?: any;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    await deleteProduct(product.id, restaurant.id);
-    setIsDeleting(false);
+    try {
+      await deleteProduct(product.id, company.id);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
-        <IconButton>
+        <IconButton size="small">
           <EllipsisHorizontal />
         </IconButton>
       </DropdownMenu.Trigger>
+
       <DropdownMenu.Content>
-        <DropdownMenu.Item className="gap-x-2" disabled>
-          <PencilSquare className="text-ui-fg-disabled" />
-          Edit
+        {/* -------- Edit -------- */}
+        <DropdownMenu.Item asChild className="gap-x-2">
+          <ProductDrawer
+            mode="edit"
+            product={product}
+            company={company}
+            categories={categories}
+          >
+            <span className="flex items-center gap-x-2">
+              <PencilSquare className="text-ui-fg-subtle" />
+              Edit
+            </span>
+          </ProductDrawer>
         </DropdownMenu.Item>
+
         <DropdownMenu.Separator />
-        <DropdownMenu.Item className="gap-x-2" onClick={handleDelete}>
-          {isDeleting ? (
-            <Spinner className="animate-spin" />
-          ) : (
-            <Trash className="text-ui-fg-subtle" />
-          )}
+
+        {/* -------- Delete -------- */}
+        <DropdownMenu.Item
+          className="gap-x-2"
+          onClick={handleDelete}
+          disabled={isDeleting}
+        >
+          <Trash
+            className={
+              isDeleting
+                ? "animate-spin"
+                : "text-ui-fg-subtle"
+            }
+          />
           Delete
         </DropdownMenu.Item>
       </DropdownMenu.Content>

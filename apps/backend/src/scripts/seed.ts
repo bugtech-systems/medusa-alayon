@@ -22,13 +22,14 @@ import type { Logger, ExecArgs } from "@medusajs/framework/types"
 import dotenv from "dotenv"
 
 import medusaEatsSeedData from "../../data/medusa-eats-seed-data.json"
-import { createRestaurantWorkflow } from "../workflows/restaurant/workflows/create-restaurant"
-import { createRestaurantProductsWorkflow } from "../workflows/restaurant/workflows/create-restaurant-products"
+import { createCompaniesWorkflow } from "src/workflows/company/workflows"
+import { createCompanyProductsWorkflow } from "src/workflows/company/workflows/create-company-products"
+import { createCompanyWorkflow } from "@/workflows/company/workflows/create-company"
 
 dotenv.config()
 
 const FRONTEND_URL =
-  process.env.FRONTEND_URL || "http://localhost:3000"
+  process.env.FRONTEND_URL || "http://localhost:8001"
 
 const countries = ["ph"]
 const fulfillmentProviderId = "manual-provider"
@@ -346,60 +347,60 @@ export default async function seedDemoData({
      API Key
   --------------------------------- */
 
-  const apiKey = await findOrCreate(
-    async () => {
-      const [key] =
-        await apiKeyService.listApiKeys({
-          title: "Webshop",
-        })
-      return key
-    },
-    async () => {
-      const { result } =
-        await createApiKeysWorkflow(
-          container
-        ).run({
-          input: {
-            api_keys: [
-              {
-                title: "Webshop",
-                type: "publishable",
-                created_by: ""
-              },
-            ],
-          },
-        })
-      return result[0]
-    }
-  )
+  // const apiKey = await findOrCreate(
+  //   async () => {
+  //     const [key] =
+  //       await apiKeyService.listApiKeys({
+  //         title: "Webshop",
+  //       })
+  //     return key
+  //   },
+  //   async () => {
+  //     const { result } =
+  //       await createApiKeysWorkflow(
+  //         container
+  //       ).run({
+  //         input: {
+  //           api_keys: [
+  //             {
+  //               title: "Webshop",
+  //               type: "publishable",
+  //               created_by: ""
+  //             },
+  //           ],
+  //         },
+  //       })
+  //     return result[0]
+  //   }
+  // )
 
-  await safeRun(() =>
-    linkSalesChannelsToApiKeyWorkflow(
-      container
-    ).run({
-      input: {
-        id: apiKey.id,
-        add: [defaultSalesChannel.id],
-      },
-    })
-  )
+  // await safeRun(() =>
+  //   linkSalesChannelsToApiKeyWorkflow(
+  //     container
+  //   ).run({
+  //     input: {
+  //       id: apiKey.id,
+  //       add: [defaultSalesChannel.id],
+  //     },
+  //   })
+  // )
 
   /* --------------------------------
      Restaurant
   --------------------------------- */
 
   const restaurantInput = {
-    ...medusaEatsSeedData.restaurant,
-    image_url:
+    ...medusaEatsSeedData.merchant,
+    logo_url:
       FRONTEND_URL +
-      medusaEatsSeedData.restaurant.image_url,
+      medusaEatsSeedData.merchant.logo_url,
   }
 
-  const { result: restaurant } =
-    await createRestaurantWorkflow(
+  const { result: [company] } =
+    await createCompanyWorkflow(
       container
     ).run({
-      input: { restaurant: restaurantInput },
+      input: restaurantInput
     })
 
   /* --------------------------------
@@ -457,11 +458,11 @@ export default async function seedDemoData({
       }
     )
 
-  await createRestaurantProductsWorkflow(
+  await createCompanyProductsWorkflow(
     container
   ).run({
     input: {
-      restaurant_id: restaurant.id,
+      company_id: company.id,
       products,
     },
   })

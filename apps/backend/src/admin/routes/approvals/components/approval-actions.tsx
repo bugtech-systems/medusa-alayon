@@ -1,6 +1,6 @@
 import { Check, XMark, ArrowRightMini } from "@medusajs/icons";
 import { Button, IconButton, usePrompt } from "@medusajs/ui";
-import { ApprovalStatusType, ApprovalType } from "../../../../types/approval";
+import { ApprovalStatusType, ApprovalType } from "../../../../types1/approval";
 import { useUpdateApproval } from "../../../hooks/api/approvals";
 import { useState } from "react";
 

@@ -1,19 +1,19 @@
 import { MedusaError } from "@medusajs/utils";
 import { createStep, StepResponse } from "@medusajs/workflows-sdk";
 import { DriverDTO } from "../../../modules/delivery/types/common";
-import { RestaurantAdminDTO } from "../../../modules/restaurant/types/common";
+import { CompanyDTO, EmployeeDTO } from "@/modules/company/types/common";
 import {
-  UpdateRestaurantsDTO,
-  UpdateRestaurantAdminsDTO,
-} from "../../../modules/restaurant/types/mutations";
-import { RESTAURANT_MODULE } from "../../../modules/restaurant";
+  UpdateCompanyDTO,
+  UpdateEmployeeDTO,
+} from "@/modules/company/types/mutations";
+import { COMPANY_MODULE } from "../../../modules/company";
 import { DELIVERY_MODULE } from "../../../modules/delivery";
 
 type UpdateUserStepInput = (
-  | UpdateRestaurantsDTO
-  | UpdateRestaurantAdminsDTO
+  | UpdateCompanyDTO
+  | UpdateEmployeeDTO
 ) & {
-  actor_type: "restaurant" | "driver";
+  actor_type: "company" | "driver";
 };
 
 export const updateUserStepId = "update-user-step";
@@ -23,19 +23,19 @@ export const updateUserStep = createStep(
     input: UpdateUserStepInput,
     { container }
   ): Promise<
-    StepResponse<RestaurantAdminDTO | DriverDTO, UpdateUserStepInput>
+    StepResponse<any | DriverDTO, UpdateUserStepInput>
   > => {
-    const { actor_type, ...data } = input;
+    const { actor_type, ...data } = input as any;
 
-    if (actor_type === "restaurant") {
-      const service = container.resolve(RESTAURANT_MODULE);
+    if (actor_type === "company") {
+      const service = container.resolve(COMPANY_MODULE);
 
       const compensationData = {
-        ...(await service.retrieveRestaurantAdmin(data.id)),
-        actor_type: "restaurant" as "restaurant",
+        ...(await service.retrieveEmployee(data.id)),
+        actor_type: "company" as "company",
       };
 
-      const restaurantAdmin = await service.updateRestaurantAdmins(data);
+      const restaurantAdmin = await service.updateEmployees(data);
 
       return new StepResponse(restaurantAdmin, compensationData);
     }
@@ -46,20 +46,20 @@ export const updateUserStep = createStep(
       const compensationData = {
         ...(await service.retrieveDriver(data.id)),
         actor_type: "driver" as "driver",
-      };
+      } as any;
 
-      const driver = await service.updateDrivers(data);
+      const driver = await service.updateDrivers(data) as any;
 
       return new StepResponse(driver, compensationData);
     }
 
     throw MedusaError.Types.INVALID_DATA;
   },
-  function ({ actor_type, ...data }: UpdateUserStepInput, { container }) {
-    if (actor_type === "restaurant") {
-      const service = container.resolve(RESTAURANT_MODULE);
+  function ({ actor_type, ...data }: any, { container }) {
+    if (actor_type === "company") {
+      const service = container.resolve(COMPANY_MODULE);
 
-      return service.updateRestaurantAdmins(data);
+      return service.updateEmployees(data);
     }
 
     if (actor_type === "driver") {

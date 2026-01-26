@@ -5,12 +5,12 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sdk } from "../config";
-import { retrieveCart } from "../data";
-import { getAuthHeaders, getCacheTag } from "../data/cookies";
-import { DeliveryDTO } from "../types";
+import { retrieveCart } from "../data1";
+import { DeliveryDTO } from "@/lib/types";
+import { getCartId, removeCartId, setDeliveryId, getAuthHeaders, getCacheTag } from "../data/cookies";
 
 export async function updateCart(data: Record<string, unknown>) {
-  const cartId = cookies().get("_medusa_cart_id")?.value;
+  const cartId = await (await getCartId());
 
   if (!cartId) {
     throw new Error("No cart found");
@@ -21,17 +21,17 @@ export async function updateCart(data: Record<string, unknown>) {
     data,
     {},
     {
-      ...getAuthHeaders(),
+      ...(await getAuthHeaders()),
     }
   );
 
-  revalidateTag(getCacheTag("carts"));
+  revalidateTag(await getCacheTag("carts"));
 
   return response;
 }
 
 export async function completeCart() {
-  const cartId = cookies().get("_medusa_cart_id")?.value;
+  const cartId = (await getCartId())
 
   if (!cartId) {
     throw new Error("No cart found");
@@ -41,11 +41,11 @@ export async function completeCart() {
     cartId,
     {},
     {
-      ...getAuthHeaders(),
+      ...(await getAuthHeaders()),
     }
   );
 
-  revalidateTag(getCacheTag("carts"));
+  revalidateTag(await getCacheTag("carts"));
 
   return response;
 }
@@ -55,39 +55,64 @@ export async function addPaymentSession(cartId: string) {
 
   const res = await sdk.store.payment.initiatePaymentSession(
     cart,
-    {},
+    {provider_id: 'pp_system_default'},
     undefined,
     {
-      ...getAuthHeaders(),
+      ...(await getAuthHeaders()),
     }
   );
 
   return res;
 }
 
-export async function createDelivery(cartId: string, restaurantId: string) {
+export async function prepareCart(cartId: string, customer: any) {
+  const { cart } = await sdk.client.fetch<{
+    cart: DeliveryDTO;
+  }>("/store/checkout/prepare", {
+    method: "POST",
+    body: { cart_id: cartId, ...customer },
+    headers: {
+      "Content-Type": "application/json",
+      ...(await getAuthHeaders()),
+    },
+  });
+
+  
+  
+  
+
+  revalidateTag(await getCacheTag("carts"));
+
+  return cart;
+}
+
+
+export async function createDelivery(cartId: string, companyId: string) {
   const { delivery } = await sdk.client.fetch<{
     delivery: DeliveryDTO;
   }>("/store/deliveries", {
     method: "POST",
-    body: { cart_id: cartId, restaurant_id: restaurantId },
+    body: { cart_id: cartId, company_id: companyId },
     headers: {
       "Content-Type": "application/json",
-      ...getAuthHeaders(),
+      ...(await getAuthHeaders()),
     },
   });
 
-  revalidateTag(getCacheTag("deliveries"));
+  revalidateTag(await getCacheTag("deliveries"));
 
   return delivery;
 }
 
 export async function placeOrder(prevState: any, data: FormData) {
-  const cartId = cookies().get("_medusa_cart_id")?.value;
+  const cartId = (await getCartId())
 
   if (!cartId) {
     return { message: "No cart found" };
   }
+  
+  
+  let cart = await retrieveCart(cartId);
 
   const firstName = data.get("first-name")?.toString();
   const lastName = data.get("last-name")?.toString();
@@ -96,7 +121,7 @@ export async function placeOrder(prevState: any, data: FormData) {
   const zip = data.get("zip")?.toString();
   const phone = data.get("phone")?.toString();
   const email = data.get("email")?.toString();
-  const restaurantId = data.get("restaurant-id")?.toString();
+  const companyId = data.get("company-id")?.toString();
 
   if (
     !firstName ||
@@ -105,8 +130,7 @@ export async function placeOrder(prevState: any, data: FormData) {
     !city ||
     !zip ||
     !phone ||
-    !email ||
-    !restaurantId
+    !companyId
   ) {
     return { message: "Please fill in all fields" };
   }
@@ -128,12 +152,53 @@ export async function placeOrder(prevState: any, data: FormData) {
     if (!updatedCart) {
       return { message: "Error updating cart" };
     }
+    
+    let cartPrep = await prepareCart(cartId, {email, phone, firstName, lastName, companyId})
+    
+    
+      const headers = {
+        ...(await getAuthHeaders()),
+      }
+    
+      const cartsTag = await getCacheTag("carts")
+      const ordersTag = await getCacheTag("orders")
+      const approvalsTag = await getCacheTag("approvals")
+    
+    
+     
+    console.log(cartPrep, cart, 'CARRRTTT')
+      if(!cart?.payment_collection?.payment_sessions?.length){
+        await addPaymentSession(cartId);
+      }
+        
+    
+    
+    
+      await completeCart()
+    
 
-    const delivery = await createDelivery(cartId, restaurantId);
+    
+      const delivery = await createDelivery(cartId, companyId);
 
-    cookies().set("_medusa_cart_id", "", { maxAge: 0 });
-    cookies().set("_medusa_delivery_id", delivery.id);
+    
+      revalidateTag(cartsTag)
+      revalidateTag(ordersTag)
+      revalidateTag(approvalsTag)
+    
+      await removeCartId()
+    
+    
+    
+    console.log(cart, 'CARTT')
+    
+    
+
+
+
+
+    await setDeliveryId(delivery.id)
   } catch (error) {
+  console.log(error, 'ERRRRs')
     return { message: "Error placing order" };
   }
   redirect("/your-order");

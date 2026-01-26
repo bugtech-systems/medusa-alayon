@@ -1,22 +1,22 @@
 "use client";
 
 import { signup } from "@/lib/actions";
-import { RestaurantDTO } from "@/lib/types";
+import { CompanyDTO } from "@/lib/types";
 import { Badge, Button, Input, Label, Select } from "@medusajs/ui";
 import { Link } from "next-view-transitions";
 import { useState, useTransition } from "react";
 
 const userTypes = [
   { value: "driver", label: "Driver" },
-  { value: "restaurant", label: "Restaurant" },
+  { value: "company", label: "Merchant" },
 ];
 
 export function SignupForm({
-  restaurants = [],
+  companies = [],
 }: {
-  restaurants: RestaurantDTO[];
+  companies: CompanyDTO[];
 }) {
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState("company");
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -45,15 +45,15 @@ export function SignupForm({
         </Select>
 
         {/* Restaurant */}
-        {userType === "restaurant" && (
-          <Select name="restaurant_id">
+        {userType === "company" && (
+          <Select name="company_id">
             <Select.Trigger>
-              <Select.Value placeholder="Select restaurant" />
+              <Select.Value placeholder="Select Company" />
             </Select.Trigger>
             <Select.Content>
-              {restaurants.map((restaurant) => (
-                <Select.Item key={restaurant.id} value={restaurant.id}>
-                  {restaurant.name}
+              {companies.map((company) => (
+                <Select.Item key={company.id} value={company.id}>
+                  {company.name}
                 </Select.Item>
               ))}
             </Select.Content>
@@ -73,7 +73,7 @@ export function SignupForm({
       </div>
 
       <div className="flex justify-between">
-        <Link href="/login">
+        <Link href="/admin/login">
           <Button variant="transparent" size="large">
             Log in
           </Button>

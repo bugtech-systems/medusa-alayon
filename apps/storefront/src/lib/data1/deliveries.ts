@@ -1,5 +1,5 @@
 import { sdk } from "../config";
-import { DeliveryDTO } from "../types";
+import { DeliveryDTO } from "@/lib/types";
 import { getAuthHeaders, getCacheHeaders } from "./cookies";
 
 export async function listDeliveries(

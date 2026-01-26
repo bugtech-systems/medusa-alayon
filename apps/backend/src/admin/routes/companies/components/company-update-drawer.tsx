@@ -1,5 +1,5 @@
 import { Drawer, toast } from "@medusajs/ui";
-import { AdminUpdateCompany, QueryCompany } from "../../../../types";
+import { AdminUpdateCompany, QueryCompany } from "../../../../types1";
 import { useUpdateCompany } from "../../../hooks/api";
 import { CompanyForm } from "./company-form";
 

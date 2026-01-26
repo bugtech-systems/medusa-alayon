@@ -26,9 +26,9 @@ export const deleteDeliveryDriversStep = createStep(
       .then((res) => res.map((d: DriverDTO) => d.id))
       .catch(() => []);
 
-    const deliveryModuleService = container.resolve(DELIVERY_MODULE);
+    const delivery = container.resolve(DELIVERY_MODULE);
 
-    await deliveryModuleService.softDeleteDeliveryDrivers(drivers);
+    await delivery.softDeleteDeliveryDrivers(drivers);
 
     return new StepResponse(drivers, drivers);
   },

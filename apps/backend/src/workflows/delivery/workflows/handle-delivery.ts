@@ -11,7 +11,7 @@ import {
   createFulfillmentStep,
   createOrderStep,
   findDriverStep,
-  notifyRestaurantStep,
+  notifyCompanyStep,
   setTransactionIdStep,
 } from "../../delivery/steps";
 
@@ -30,7 +30,7 @@ export const handleDeliveryWorkflow = createWorkflow(
   function (input: WorkflowData<WorkflowInput>): WorkflowResponse<string> {
     setTransactionIdStep(input.delivery_id);
 
-    notifyRestaurantStep(input.delivery_id);
+    notifyCompanyStep(input.delivery_id);
 
     findDriverStep(input.delivery_id);
 

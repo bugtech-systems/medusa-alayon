@@ -42,7 +42,7 @@ createCartWorkflow.hooks.cartCreated(
       return;
     }
 
-    const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK);
+    const remoteLink = container.resolve(ContainerRegistrationKeys.LINK);
 
     await remoteLink.dismiss({
       [COMPANY_MODULE]: {

@@ -10,7 +10,7 @@ export const linkEmployeeToCustomerStep = createStep(
   ): Promise<
     StepResponse<undefined, { employeeId: string; customerId: string }>
   > => {
-    const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK);
+    const remoteLink = container.resolve(ContainerRegistrationKeys.LINK);
 
     const link = {
       [COMPANY_MODULE]: {
@@ -31,7 +31,7 @@ export const linkEmployeeToCustomerStep = createStep(
   ): Promise<
     StepResponse<undefined, { employeeId: string; customerId: string }>
   > => {
-    const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK);
+    const remoteLink = container.resolve(ContainerRegistrationKeys.LINK);
 
     const link = {
       [COMPANY_MODULE]: {

@@ -4,8 +4,8 @@ import {
   CartDTO,
   OrderDTO,
 } from "@medusajs/types";
-import { RestaurantDTO } from "../../restaurant/types/common";
 import DeliveryModuleService from "../service";
+import { CompanyDTO } from "@/modules/company/types/common";
 
 export enum DeliveryStatus {
   PENDING = "pending",
@@ -30,7 +30,7 @@ export interface DeliveryDTO {
   items: DeliveryItemDTO[];
   cart?: CartDTO;
   order?: OrderDTO;
-  restaurant: RestaurantDTO;
+  company: CompanyDTO;
 }
 
 export type DeliveryItemDTO = (CartLineItemDTO | OrderLineItemDTO) & {

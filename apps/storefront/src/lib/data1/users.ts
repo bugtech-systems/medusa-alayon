@@ -1,22 +1,26 @@
-import { UserDTO } from "@medusajs/types";
+'use server'
+
 import { sdk } from "../config";
 import { getAuthHeaders, getCacheHeaders } from "./cookies";
-import { DriverDTO, RestaurantAdminDTO } from "../types";
+import { DriverDTO, CompanyEmployeeDTO } from "@/lib/types";
+import { removeAuthToken } from "../data/cookies";
 
 export async function retrieveUser() {
   try {
     const { user } = await sdk.client.fetch<{
-      user: RestaurantAdminDTO | DriverDTO | null;
+      user: CompanyEmployeeDTO | DriverDTO | null;
     }>("/store/users/me", {
       headers: {
-        ...getAuthHeaders(),
-        ...getCacheHeaders("users"),
+        ...(await getAuthHeaders()),
+        ...(await getCacheHeaders("users")),
       },
     });
 
+
     return user;
   } catch (error) {
-    console.error(error);
+    console.error(error, 'ERRORRR INIIII');
+    
     return null;
   }
 }

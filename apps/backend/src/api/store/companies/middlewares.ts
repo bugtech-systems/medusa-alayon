@@ -23,7 +23,9 @@ export const storeCompaniesMiddlewares: MiddlewareRoute[] = [
   {
     method: "ALL",
     matcher: "/store/companies*",
-    middlewares: [authenticate("customer", ["session", "bearer"])],
+    middlewares: [
+    // authenticate(["company", "driver"], "bearer")
+    ],
   },
   {
     method: ["GET"],
@@ -82,7 +84,6 @@ export const storeCompaniesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/store/companies/:id/employees",
     middlewares: [
-      ensureRole("company_admin"),
       validateAndTransformBody(StoreCreateEmployee),
       validateAndTransformQuery(
         StoreGetEmployeeParams,

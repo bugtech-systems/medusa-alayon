@@ -12,7 +12,7 @@ import {
   AdminUpdateEmployee,
   QueryCompany,
   QueryEmployee,
-} from "../../../../../types";
+} from "@/types1";
 import { CoolSwitch } from "../../../../components/common";
 import { currencySymbolMap } from "../../../../utils";
 

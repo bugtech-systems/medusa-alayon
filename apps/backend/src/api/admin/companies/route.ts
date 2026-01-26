@@ -14,12 +14,19 @@ export const GET = async (
 
   const { fields, pagination } = req.queryConfig;
 
+
+console.log(fields, pagination, req.filterableFields)
+
   const { data: companies, metadata } = await query.graph({
     entity: "companies",
     fields,
     filters: req.filterableFields,
     pagination,
   });
+
+
+
+
 
   res.json({
     companies,

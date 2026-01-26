@@ -5,15 +5,18 @@ import LocalizedClientLink from "@/modules/common/components/localized-client-li
 import Thumbnail from "../thumbnail"
 import PreviewAddToCart from "./preview-add-to-cart"
 import PreviewPrice from "./price"
+import { CompanyDTO } from "@/lib/types"
 
 export default async function ProductPreview({
   product,
   isFeatured,
   region,
+  company
 }: {
   product: HttpTypes.StoreProduct
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
+  company?: CompanyDTO
 }) {
   if (!product) {
     return null
@@ -69,7 +72,7 @@ export default async function ProductPreview({
               {inventoryQuantity} left
             </Text>
           </div>
-          <PreviewAddToCart product={product} region={region} />
+          <PreviewAddToCart product={product} region={region} company={company}/>
         </div>
       </div>
     </LocalizedClientLink>

@@ -9,6 +9,7 @@ export type AddToCartEventPayload = {
     quantity: number
   }[]
   regionId: string
+  companyId?: string
 }
 
 type CartAddEventHandler = (payload: AddToCartEventPayload) => void

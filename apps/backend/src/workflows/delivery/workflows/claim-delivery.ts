@@ -4,7 +4,7 @@ import {
   WorkflowResponse,
 } from "@medusajs/workflows-sdk";
 import { DeliveryStatus } from "../../../modules/delivery/types/common";
-import { setStepSuccessStep } from "../../util/steps";
+import { setStepSuccessStep } from "@/workflows/util/steps";
 import { deleteDeliveryDriversStep, updateDeliveryStep } from "../steps";
 import { findDriverStepId } from "../steps/find-driver";
 
@@ -23,7 +23,7 @@ export const claimDeliveryWorkflow = createWorkflow(
         driver_id: input.driver_id,
         delivery_status: DeliveryStatus.PICKUP_CLAIMED,
       },
-    });
+    }) as any;
 
     // Delete the delivery drivers as they are no longer needed
     deleteDeliveryDriversStep({ delivery_id: claimedDelivery.id });

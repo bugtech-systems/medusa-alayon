@@ -1,5 +1,6 @@
 import { listProductsWithSort } from "@/lib/data/products"
 import { getRegion } from "@/lib/data/regions"
+import { CompanyDTO } from "@/lib/types"
 import ProductPreview from "@/modules/products/components/product-preview"
 import { Pagination } from "@/modules/store/components/pagination"
 import { SortOptions } from "@/modules/store/components/refinement-list/sort-products"
@@ -25,6 +26,7 @@ export default async function PaginatedProducts({
   productsIds,
   countryCode,
   customer,
+  company
 }: {
   sortBy?: SortOptions
   page: number
@@ -33,6 +35,7 @@ export default async function PaginatedProducts({
   productsIds?: string[]
   countryCode: string
   customer?: B2BCustomer | null
+  company?: CompanyDTO
 }) {
   const queryParams: PaginatedProductsParams = {
     limit: 12,
@@ -79,7 +82,7 @@ export default async function PaginatedProducts({
           products.map((p) => {
             return (
               <li key={p.id}>
-                <ProductPreview product={p} region={region} />
+                <ProductPreview product={p} region={region} company={company} />
               </li>
             )
           })

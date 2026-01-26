@@ -1,4 +1,4 @@
-import { DeliveryDTO, DeliveryStatus, DriverDTO } from "@frontend/lib/types";
+import { DeliveryDTO, DeliveryStatus, DriverDTO } from "@/lib/types";
 import { Container, Heading, Text } from "@medusajs/ui";
 import DeliveryCard from "./delivery-card";
 
@@ -13,7 +13,7 @@ export default async function DeliveryColumn({
   deliveries: DeliveryDTO[];
   statusFilters?: DeliveryStatus[];
   driver?: DriverDTO;
-  type: "restaurant" | "driver";
+  type: "company" | "driver";
 }) {
   const columnDeliveries = deliveries?.filter(
     (d) => d && statusFilters?.includes(d.delivery_status)

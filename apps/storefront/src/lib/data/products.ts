@@ -106,7 +106,7 @@ export const listProducts = async ({
           limit,
           offset,
           region_id: region.id,
-          fields: "*variants.calculated_price",
+          fields: "*variants.calculated_price,*company",
           ...queryParams,
         },
         headers,
@@ -158,6 +158,9 @@ export const listProductsWithSort = async ({
     },
     countryCode,
   })
+
+
+  console.log(products, count, 'PRODUCTSS')
 
   const sortedProducts = sortProducts(products, sortBy)
 

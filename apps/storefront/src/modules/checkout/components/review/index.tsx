@@ -42,23 +42,7 @@ const Review = ({
           </LocalizedClientLink>
         </Text>
       </div>
-      {spendLimitExceeded ? (
-        <>
-          <div className="flex items-center gap-x-2 bg-neutral-100 p-3 rounded-md shadow-borders-base">
-            <ExclamationCircle className="text-orange-500 w-fit overflow-visible" />
-            <p className="text-neutral-950 text-xs">
-              This order exceeds your spending limit.
-              <br />
-              Please contact your manager for approval.
-            </p>
-          </div>
-          <Button className="w-full h-10 rounded-full shadow-none" disabled>
-            Place Order
-          </Button>
-        </>
-      ) : (
-        <PaymentButton cart={cart} data-testid="submit-order-button" />
-      )}
+
     </div>
   )
 }

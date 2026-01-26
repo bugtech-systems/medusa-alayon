@@ -1,6 +1,6 @@
 import { createSelectParams } from "@medusajs/medusa/api/utils/validators";
 import { z } from "zod";
-import { ApprovalStatusType } from "../../../types/approval";
+import { ApprovalStatusType } from "../../../types1/approval";
 
 /* Company Validators */
 export type StoreGetCompanyParamsType = z.infer<typeof StoreGetCompanyParams>;
@@ -10,6 +10,7 @@ export type StoreCreateCompanyType = z.infer<typeof StoreCreateCompany>;
 export const StoreCreateCompany = z
   .object({
     name: z.string(),
+    handle: z.string(),
     email: z.string(),
     currency_code: z.string(),
     phone: z.string().optional().nullable(),
@@ -30,6 +31,7 @@ export type StoreUpdateCompanyType = z.infer<typeof StoreUpdateCompany>;
 export const StoreUpdateCompany = z
   .object({
     name: z.string().optional(),
+    handle: z.string().optional(),
     email: z.string().optional(),
     currency_code: z.string().optional(),
     phone: z.string().optional().nullable(),

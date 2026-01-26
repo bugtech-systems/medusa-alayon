@@ -1,12 +1,18 @@
-import { retrieveRestaurant } from "@frontend/lib/data";
+import { retrieveCompany } from "@/lib/data";
 import { HttpTypes } from "@medusajs/types";
 import { Container, Heading, Text } from "@medusajs/ui";
 import Image from "next/image";
+import { convertToLocale } from "@/lib/util/money"
 
 export async function OrderSummary({ cart }: { cart: HttpTypes.StoreCart }) {
-  const restaurant = await retrieveRestaurant(
-    cart?.metadata?.restaurant_id as string
+   console.log(cart, 'restauiramt')
+
+  const restaurant = await retrieveCompany(
+    cart?.metadata?.company_id as string
   );
+  
+   console.log(restaurant, cart, 'restauiramt')
+  
 
   return (
     <Container className="flex flex-col gap-4">
@@ -14,7 +20,7 @@ export async function OrderSummary({ cart }: { cart: HttpTypes.StoreCart }) {
         level="h2"
         className="text-lg font-semibold text-ui-fg-base text-center"
       >
-        Your order from {restaurant.name}
+        Your order from {restaurant?.name}
       </Heading>
       <div className="flex gap-4 justify-between flex-wrap">
         {cart?.items?.map((item: any) => {
@@ -33,7 +39,8 @@ export async function OrderSummary({ cart }: { cart: HttpTypes.StoreCart }) {
                   {item.title}
                 </Heading>
                 <Text className="text-sm text-ui-fg-subtle">
-                  {item.quantity} x €{item.unit_price}
+                  {item.quantity} x {convertToLocale({ amount: item.unit_price ?? 0, currency_code: cart?.currency_code })}
+
                 </Text>
               </div>
             </div>
@@ -43,7 +50,7 @@ export async function OrderSummary({ cart }: { cart: HttpTypes.StoreCart }) {
         <div className="flex justify-between w-full">
           <Text className="text-md text-ui-fg-subtle">Order total</Text>
           <Text className="text-base text-ui-fg-subtle">
-            €{cart.total as number}
+           {convertToLocale({ amount: cart.total ?? 0, currency_code: cart?.currency_code })}
           </Text>
         </div>
       </div>

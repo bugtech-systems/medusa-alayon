@@ -5,14 +5,14 @@ import "server-only";
 
 const jwtSecret = process.env.JWT_SECRET || "supersecret";
 
-export function createSession(token: string) {
+export async function createSession(token: string) {
   if (!token) {
     return;
   }
 
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-  cookies().set("_medusa_jwt", token, {
+  const nextCookies = await cookies();
+  nextCookies.set("_medusa_jwt", token, {
     httpOnly: true,
     secure: process.env.VERCEL_ENV === "production",
     expires: expiresAt,
@@ -21,8 +21,10 @@ export function createSession(token: string) {
   });
 }
 
-export function retrieveSession() {
-  const token = cookies().get("_medusa_jwt")?.value;
+export async function retrieveSession() {
+  const nextCookies = await cookies();
+
+  const token = nextCookies.get("_medusa_jwt")?.value;
 
   if (!token) {
     return null;
@@ -32,7 +34,7 @@ export function retrieveSession() {
 }
 
 export function destroySession() {
-  cookies().delete("_medusa_jwt");
+  
   revalidateTag("user");
 }
 

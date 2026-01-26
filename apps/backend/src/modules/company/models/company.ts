@@ -7,6 +7,8 @@ export const Company = model.define("company", {
       prefix: "comp",
     })
     .primaryKey(),
+  handle: model.text(),
+  is_open: model.boolean().default(false),
   name: model.text(),
   email: model.text(),
   phone: model.text().nullable(),
@@ -17,6 +19,9 @@ export const Company = model.define("company", {
   country: model.text().nullable(),
   logo_url: model.text().nullable(),
   currency_code: model.text().nullable(),
+  business_type: model
+    .enum(["laundry", "gas", "mineral", "merchandising"])
+    .default("merchandising"),
   spending_limit_reset_frequency: model
     .enum(["never", "daily", "weekly", "monthly", "yearly"])
     .default("monthly"),

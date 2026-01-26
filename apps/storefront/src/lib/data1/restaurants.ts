@@ -1,11 +1,11 @@
 import { sdk } from "../config";
-import { RestaurantDTO } from "../types";
+import { CompanyDTO } from "@/lib/types";
 import { getCacheHeaders } from "./cookies";
 
 export async function retrieveRestaurant(
   restaurantId: string
-): Promise<RestaurantDTO> {
-  const { restaurant }: { restaurant: RestaurantDTO } = await sdk.client.fetch(
+): Promise<CompanyDTO> {
+  const { restaurant }: { restaurant: CompanyDTO } = await sdk.client.fetch(
     `/store/restaurants/${restaurantId}`,
     {
       method: "GET",
@@ -20,7 +20,7 @@ export async function retrieveRestaurant(
 
 export async function listRestaurants(
   filter?: Record<string, string>
-): Promise<RestaurantDTO[]> {
+): Promise<CompanyDTO[]> {
   const query = new URLSearchParams(filter).toString();
 
   const { restaurants }: { restaurants: RestaurantDTO[] } =
@@ -36,8 +36,8 @@ export async function listRestaurants(
 
 export async function retrieveRestaurantByHandle(
   handle: string
-): Promise<RestaurantDTO> {
-  const { restaurants }: { restaurants: RestaurantDTO[] } =
+): Promise<CompanyDTO> {
+  const { restaurants }: { restaurants: CompanyDTO[] } =
     await sdk.client.fetch(`/store/restaurants?handle=${handle}`, {
       method: "GET",
       headers: {

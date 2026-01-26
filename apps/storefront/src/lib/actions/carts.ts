@@ -1,6 +1,6 @@
 "use server";
 
-import { retrieveUser } from "@frontend/lib/data";
+import { retrieveUser } from "@/lib/data1";
 import { CartDTO, HttpTypes } from "@medusajs/types";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";

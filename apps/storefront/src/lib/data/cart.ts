@@ -53,7 +53,7 @@ export async function retrieveCart(id?: string) {
     })
 }
 
-export async function getOrSetCart(countryCode: string) {
+export async function getOrSetCart(countryCode: string, company_id?: string) {
   let cart = await retrieveCart()
   const region = await getRegion(countryCode)
   const customer = await retrieveCustomer()
@@ -61,6 +61,9 @@ export async function getOrSetCart(countryCode: string) {
   if (!region) {
     throw new Error(`Region not found for country code: ${countryCode}`)
   }
+
+
+console.log(customer, 'CUSSTOMER CART')
 
   const headers = {
     ...(await getAuthHeaders()),
@@ -70,7 +73,7 @@ export async function getOrSetCart(countryCode: string) {
     const body = {
       region_id: region.id,
       metadata: {
-        company_id: customer?.employee?.company_id,
+        company_id: company_id,
       },
     }
 
@@ -120,19 +123,24 @@ export async function addToCart({
   variantId,
   quantity,
   countryCode,
+  companyId
 }: {
   variantId: string
   quantity: number
   countryCode: string
+  companyId?: string
 }) {
   if (!variantId) {
     throw new Error("Missing variant ID when adding to cart")
   }
 
-  const cart = await getOrSetCart(countryCode)
+  const cart = await getOrSetCart(countryCode, companyId);
+
   if (!cart) {
     throw new Error("Error retrieving or creating cart")
   }
+
+
 
   const headers = {
     ...(await getAuthHeaders()),
@@ -153,6 +161,8 @@ export async function addToCart({
       revalidateTag(fullfillmentCacheTag)
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)
+      await updateCart({metadata: { company_id: companyId }})
+
     })
     .catch(medusaError)
 }
@@ -160,11 +170,13 @@ export async function addToCart({
 export async function addToCartBulk({
   lineItems,
   countryCode,
+  companyId
 }: {
   lineItems: HttpTypes.StoreAddCartLineItem[]
   countryCode: string
+  companyId?: string
 }) {
-  const cart = await getOrSetCart(countryCode)
+  const cart = await getOrSetCart(countryCode, companyId)
 
   if (!cart) {
     throw new Error("Error retrieving or creating cart")
@@ -193,6 +205,7 @@ export async function addToCartBulk({
       revalidateTag(fullfillmentCacheTag)
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)
+      await updateCart({metadata: { company_id: companyId }})
     })
     .catch(medusaError)
 }

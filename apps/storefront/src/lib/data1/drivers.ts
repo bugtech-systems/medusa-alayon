@@ -1,6 +1,6 @@
 import { sdk } from "../config";
 
-import { DriverDTO } from "@frontend/lib/types";
+import { DriverDTO } from "@/lib/types";
 import { getAuthHeaders, getCacheHeaders } from "./cookies";
 
 export async function retrieveDriver(driverId: string): Promise<DriverDTO> {

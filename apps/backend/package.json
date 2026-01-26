@@ -25,13 +25,15 @@
   },
   "dependencies": {
     "@medusajs/admin-sdk": "2.12.5",
-    "@medusajs/cli": "2.12.5",
     "@medusajs/admin-shared": "2.12.5",
+    "@medusajs/cli": "2.12.5",
     "@medusajs/dashboard": "2.12.5",
     "@medusajs/framework": "2.12.5",
+    "@medusajs/fulfillment-manual": "^2.12.5",
     "@medusajs/js-sdk": "2.12.5",
     "@medusajs/medusa": "2.12.5",
     "@medusajs/ui": "4.0.31",
+    "medusa-react": "^9.0.18",
     "zod": "3.25.76"
   },
   "devDependencies": {

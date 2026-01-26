@@ -13,7 +13,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
-import { QueryQuote } from "../../../../types";
+import { QueryQuote } from "../../../../types1";
 import { Form } from "../../../components/common/form";
 import { useCreateQuoteMessage } from "../../../hooks/api/quotes";
 import { QuoteItem } from "./quote-details";

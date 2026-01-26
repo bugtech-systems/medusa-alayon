@@ -1,6 +1,6 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
 import { ContainerRegistrationKeys } from "@medusajs/utils";
-import { createEmployeesWorkflow } from "../../../../../workflows/employee/workflows";
+import { createEmployeesWorkflow } from "@/workflows/employee/workflows";
 import {
   StoreCreateEmployeeType,
   StoreGetEmployeeParamsType,
@@ -42,6 +42,8 @@ export const POST = async (
 ) => {
   const { id } = req.params;
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+
+
 
   const { result: createdEmployee } = await createEmployeesWorkflow.run({
     input: {

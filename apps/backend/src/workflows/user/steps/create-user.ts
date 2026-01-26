@@ -1,16 +1,16 @@
 import { MedusaError } from "@medusajs/utils";
 import { createStep, StepResponse } from "@medusajs/workflows-sdk";
 import { DriverDTO } from "../../../modules/delivery/types/common";
-import { RestaurantAdminDTO } from "../../../modules/restaurant/types/common";
+import { EmployeeDTO } from "../../../modules/company/types/common";
 import {
   CreateDriverInput,
-  CreateRestaurantAdminInput,
+  CreateCompanyEmployeeDTO,
 } from "../workflows/create-user";
-import { RESTAURANT_MODULE } from "../../../modules/restaurant";
+import { COMPANY_MODULE } from "../../../modules/company";
 import { DELIVERY_MODULE } from "../../../modules/delivery";
 
-type CreateUserStepInput = (CreateRestaurantAdminInput | CreateDriverInput) & {
-  actor_type: "restaurant" | "driver";
+type CreateUserStepInput = (CreateCompanyEmployeeDTO | CreateDriverInput) & {
+  actor_type: "company" | "driver";
 };
 
 type CompensationStepInput = {
@@ -25,18 +25,18 @@ export const createUserStep = createStep(
     input: CreateUserStepInput,
     { container }
   ): Promise<
-    StepResponse<RestaurantAdminDTO | DriverDTO, CompensationStepInput>
+    StepResponse<any | DriverDTO, CompensationStepInput>
   > => {
-    if (input.actor_type === "restaurant") {
-      const service = container.resolve(RESTAURANT_MODULE);
+    if (input.actor_type === "company") {
+      const service = container.resolve(COMPANY_MODULE);
 
-      const restaurantAdmin = await service.createRestaurantAdmins(
-        input as CreateRestaurantAdminInput
+      const restaurantAdmin = await service.createEmployees(
+        input as CreateCompanyEmployeeDTO
       );
 
       const compensationData = {
         id: restaurantAdmin.id,
-        actor_type: "restaurant",
+        actor_type: "company",
       };
 
       return new StepResponse(restaurantAdmin, compensationData);
@@ -50,12 +50,12 @@ export const createUserStep = createStep(
       const driverWithAvatar = await service.updateDrivers({
         id: driver.id,
         avatar_url: `https://robohash.org/${driver.id}?size=40x40&set=set1&bgset=bg1`,
-      });
+      }) as any;
 
       const compensationData = {
         id: driverWithAvatar.id,
         actor_type: "driver",
-      };
+      } as any;
 
       return new StepResponse(driverWithAvatar, compensationData);
     }
@@ -63,10 +63,10 @@ export const createUserStep = createStep(
     throw MedusaError.Types.INVALID_DATA;
   },
   function ({ id, actor_type }: CompensationStepInput, { container }) {
-    if (actor_type === "restaurant") {
-      const service = container.resolve(RESTAURANT_MODULE);
+    if (actor_type === "company") {
+      const service = container.resolve(COMPANY_MODULE);
 
-      return service.deleteRestaurantAdmins(id);
+      return service.deleteEmployees(id);
     }
 
     if (actor_type === "driver") {

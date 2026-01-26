@@ -1,4 +1,4 @@
-import { ApprovalStatusType, QueryApproval } from "../types/approval";
+import { ApprovalStatusType, QueryApproval } from "../types1/approval";
 
 export const getCartApprovalStatus = (cart: Record<string, any> | null) => {
   const defaultStatus = {

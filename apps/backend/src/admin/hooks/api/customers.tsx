@@ -1,6 +1,6 @@
 import { HttpTypes } from "@medusajs/framework/types";
 import { FetchError } from "@medusajs/js-sdk";
-import { AdminCreateCustomer, AdminCustomer } from "@medusajs/types";
+import { AdminCreateCustomer, AdminCustomer, CustomerDTO } from "@medusajs/types";
 import {
   QueryKey,
   useMutation,
@@ -13,6 +13,35 @@ import { queryKeysFactory } from "../../lib/query-key-factory";
 import { sdk } from "../../lib/client";
 
 export const customerQueryKey = queryKeysFactory("customer");
+
+export const useCustomers = (
+  companyId: string,
+  query?: Record<string, any>,
+  options?: UseQueryOptions<
+    CustomerDTO,
+    FetchError,
+    CustomerDTO,
+    QueryKey
+  >
+) => {
+  const filterQuery = new URLSearchParams(query).toString();
+
+  const fetchEmployees = async () =>
+    sdk.client.fetch<CustomerDTO>(
+      `/admin/companies/${companyId}/employees${
+        filterQuery ? `?${filterQuery}` : ""
+      }`,
+      {
+        method: "GET",
+      }
+    );
+
+  return useQuery({
+    queryKey: customerQueryKey.list(companyId),
+    queryFn: fetchEmployees,
+    ...options,
+  });
+};
 
 export const useAdminCustomerGroups = (
   options?: UseQueryOptions<
@@ -30,6 +59,7 @@ export const useAdminCustomerGroups = (
   });
 };
 
+
 export const useAdminCreateCustomer = (
   options?: UseMutationOptions<
     { customer: AdminCustomer },
@@ -40,14 +70,58 @@ export const useAdminCreateCustomer = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (customer: AdminCreateCustomer) =>
-      sdk.admin.customer.create(customer),
-    onSuccess: (data: any, variables: any, context: any) => {
-      queryClient.invalidateQueries({
+    mutationFn: async (customer: any) => {
+      const email = customer.email;
+      const companyName =
+        (customer.company_name as string | undefined) ??
+        undefined;
+
+      /**
+       * 1. Try to find existing customer by email
+       */
+      const { customers } = await sdk.admin.customer.list({
+        email,
+        limit: 10,
+      });
+      
+      
+            console.log(customers, 'CUSTOMERRS')
+
+
+      const existingCustomer = customers?.find(
+        (c) =>
+          c.email === email &&
+          c.company_name === companyName
+      );
+      
+      console.log(customers, 'CUSTOMERRS', existingCustomer)
+
+      /**
+       * 2. Return existing customer if found
+       */
+      if (existingCustomer) {
+        return { customer: existingCustomer };
+      }
+
+      /**
+       * 3. Otherwise create customer
+       */
+      return sdk.admin.customer.create(customer).catch(() => {return null;}) as any;
+    },
+
+    onSuccess: (data, variables, context) => {
+      queryClient?.invalidateQueries({
         queryKey: customerQueryKey.lists(),
       });
+
       options?.onSuccess?.(data, variables, context);
     },
+     onError: (err) => {
+     console.log(err, 'ERRORR TOO')
+      return {message: 'Something went wrong!'}  
+    },
+
     ...options,
   });
 };
+

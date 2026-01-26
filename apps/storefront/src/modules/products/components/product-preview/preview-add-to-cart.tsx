@@ -5,13 +5,17 @@ import { StoreProduct, StoreRegion } from "@medusajs/types"
 import { Button } from "@medusajs/ui"
 import ShoppingBag from "@/modules/common/icons/shopping-bag"
 import { useState } from "react"
+import { CompanyDTO } from "@/lib/types"
+import { updateCart } from "@/lib/actions"
 
 const PreviewAddToCart = ({
   product,
   region,
+  company
 }: {
   product: StoreProduct
   region: StoreRegion
+  company?: CompanyDTO
 }) => {
   const [isAdding, setIsAdding] = useState(false)
 
@@ -31,8 +35,10 @@ const PreviewAddToCart = ({
         },
       ],
       regionId: region.id,
+      companyId: company?.id
     })
-
+    
+    updateCart({metadata: {company_id: company?.id}})
     setIsAdding(false)
   }
   return (

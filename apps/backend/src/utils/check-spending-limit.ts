@@ -3,7 +3,7 @@ import {
   ModuleCompanySpendingLimitResetFrequency,
   QueryCompany,
   QueryEmployee,
-} from "../types";
+} from "../types1";
 
 export function getSpendWindow(company: QueryCompany): {
   start: Date;

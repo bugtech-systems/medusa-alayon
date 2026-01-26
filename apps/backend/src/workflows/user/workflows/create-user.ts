@@ -7,8 +7,8 @@ import {
 } from "@medusajs/workflows-sdk";
 import { createUserStep } from "../../user/steps";
 
-export type CreateRestaurantAdminInput = {
-  restaurant_id: string;
+export type CreateCompanyEmployeeDTO = {
+  company_id: string;
   email: string;
   first_name: string;
   last_name: string;
@@ -23,8 +23,8 @@ export type CreateDriverInput = {
 };
 
 type WorkflowInput = {
-  user: (CreateRestaurantAdminInput | CreateDriverInput) & {
-    actor_type: "restaurant" | "driver";
+  user: (CreateCompanyEmployeeDTO | CreateDriverInput) & {
+    actor_type: "company" | "driver";
   };
   auth_identity_id: string;
 };
@@ -39,8 +39,8 @@ export const createUserWorkflow = createWorkflow(
         authIdentityId: input.auth_identity_id,
         actorType: input.user.actor_type,
         key:
-          input.user.actor_type === "restaurant"
-            ? "restaurant_id"
+          input.user.actor_type === "company"
+            ? "company_id"
             : "driver_id",
         value: user.id,
       };

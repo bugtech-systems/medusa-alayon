@@ -1,30 +1,44 @@
-import LocalizedClientLink from "@/modules/common/components/localized-client-link"
-import LogoIcon from "@/modules/common/icons/logo"
-import MedusaCTA from "@/modules/layout/components/medusa-cta"
+import { ProfileBadge } from '@/components/common/profile-badge';
+import Footer from "@/components/common/footer";
+import { retrieveUser } from "@/lib/data1";
+import { FlyingBox } from "@medusajs/icons";
+import type { Metadata } from "next";
+import { Link } from "next-view-transitions";
+import { notFound } from 'next/navigation';
 
-export default function CheckoutLayout({
+export const metadata: Metadata = {
+  title: "Medusa Eats",
+  description: "Order food from your favorite restaurants",
+};
+
+export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
+
+
+// if (!user) notFound();
+
+
   return (
-    <div className="mb-2 w-full bg-white relative small:min-h-screen">
-      <div className="h-16 bg-white">
-        <nav className="flex h-full items-center content-container justify-between">
-          <LocalizedClientLink className="hover:text-ui-fg-base" href="/">
-            <h1 className="text-base font-medium flex items-center">
-              <LogoIcon className="inline mr-2" />
-              Medusa B2B Starter
-            </h1>
-          </LocalizedClientLink>
+    <>
+      <header className="sticky top-0 z-40 h-16 bg-ui-fg-base text-ui-fg-on-inverted">
+        <nav className="flex h-full items-center justify-between px-4 md:px-10">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xl font-semibold transition-colors hover:text-ui-bg-base-hover"
+          >
+            <FlyingBox />
+            <span>Alayon Express</span>
+          </Link>
         </nav>
-      </div>
-      <div className="relative bg-neutral-100" data-testid="checkout-container">
+      </header>
+
+      <main className="min-h-[calc(100vh-8rem)] p-4 md:p-10 transition-all duration-150 ease-in-out">
         {children}
-      </div>
-      <div className="py-4 w-full flex items-center justify-center">
-        <MedusaCTA />
-      </div>
-    </div>
-  )
+      </main>
+      <Footer />
+    </>
+  );
 }
