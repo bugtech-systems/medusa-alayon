@@ -1,4 +1,4 @@
-name: Deploy Medusa
+name: Deploy Medusa Application
 
 on:
   push:
