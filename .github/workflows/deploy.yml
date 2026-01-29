@@ -3,7 +3,7 @@ name: Deploy Medusa Application
 on:
   push:
     branches:
-      - main
+      - development
 
 jobs:
   deploy:
