@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "medusa build",
+    "rag": "nodemon --exec ts-node ./src/services/rag-supabase/server.ts",
     "seed": "medusa exec ./src/scripts/seed.ts",
     "start": "medusa start",
     "dev": "medusa develop",
@@ -33,7 +34,10 @@
     "@medusajs/js-sdk": "2.12.5",
     "@medusajs/medusa": "2.12.5",
     "@medusajs/ui": "4.0.31",
+    "@supabase/supabase-js": "^2.93.2",
     "medusa-react": "^9.0.18",
+    "socket.io": "^4.8.3",
+    "typeorm": "^0.3.28",
     "zod": "3.25.76"
   },
   "devDependencies": {

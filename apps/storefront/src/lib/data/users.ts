@@ -32,3 +32,34 @@ export const retrieveUser = async () => {
     .catch(() => null)
     
   }
+
+export async function createAiSession(customerId?: string, cartId?: string, language = "en") {
+
+ const authHeaders = await getAuthHeaders()
+
+  if (!authHeaders) return null
+
+  const headers = {
+    ...authHeaders,
+  }
+
+  const next = {
+    ...(await getCacheOptions("session")),
+  }
+
+  return await sdk.client
+    .fetch<any>(`/store/users/session`, {
+      method: "POST",
+      query: {
+        fields: "*",
+      },
+      body: {
+        customer_id: customerId,
+        cart_id: cartId,
+        language,
+      },
+      headers,
+      next,
+    })
+    .catch(() => null)
+}

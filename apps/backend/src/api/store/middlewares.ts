@@ -5,7 +5,6 @@ import { storeCompaniesMiddlewares } from "./companies/middlewares";
 import { storeFreeShippingMiddlewares } from "./free-shipping/middlewares";
 import { storeQuotesMiddlewares } from "./quotes/middlewares";
 import { merchantMiddlewares } from "./users/middlewares";
-import { aiModelsMiddlewares } from "./aimodels/middlewares";
 
 export const storeMiddlewares: MiddlewareRoute[] = [
   ...storeCartsMiddlewares,
@@ -13,7 +12,6 @@ export const storeMiddlewares: MiddlewareRoute[] = [
   ...storeQuotesMiddlewares,
   ...storeFreeShippingMiddlewares,
   ...storeApprovalsMiddlewares,
-  ...merchantMiddlewares,
-  ...aiModelsMiddlewares
+  ...merchantMiddlewares
 ];
   

@@ -1,3 +1,5 @@
+import ChatBubble from "@/components/common/chat-bubble"
+import { createAiSession } from "@/lib/data/users"
 import { retrieveCart } from "@/lib/data/cart"
 import { retrieveCustomer } from "@/lib/data/customer"
 import { listCartFreeShippingPrices } from "@/lib/data/fulfillment"
@@ -18,13 +20,15 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
   const customer = await retrieveCustomer().catch(() => null)
   const cart = await retrieveCart()
   let freeShippingPrices: StoreFreeShippingPrice[] = []
-
+  
   if (cart) {
     freeShippingPrices = await listCartFreeShippingPrices(cart.id)
   }
+  
+  
+  let session = await createAiSession(customer?.id, cart?.id);
 
-
-
+console.log(session, 'SESSSH')
 
   return (
     <>
@@ -54,7 +58,7 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
       {props.children}
 
       <Footer />
-
+       <ChatBubble sessionId={session?.id}/>
       {cart && freeShippingPrices && (
         <FreeShippingPriceNudge
           variant="popup"

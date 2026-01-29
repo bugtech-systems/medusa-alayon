@@ -2,7 +2,6 @@
 
 import { UpsertAddressDTO } from "@medusajs/types";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sdk } from "../config";
 import { retrieveCart } from "../data1";
