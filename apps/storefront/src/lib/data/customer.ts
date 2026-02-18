@@ -36,7 +36,7 @@ export const retrieveCustomer = async (): Promise<B2BCustomer | null> => {
     .fetch<{ customer: B2BCustomer }>(`/store/customers/me`, {
       method: "GET",
       query: {
-        fields: "*employee, *orders",
+        fields: "*orders",
       },
       headers,
       next,

@@ -98,3 +98,53 @@ export interface IAiModuleService {
    */
   deleteAiMemory(id: string): Promise<void>
 }
+
+
+export interface CreateAiModelInput {
+  name: string
+  description?: string
+  provider: string
+  base_model_id?: string
+  model_type: string
+  status?: string
+  config: Record<string, any>
+  metadata?: Record<string, any>
+}
+
+export interface UpdateAiModelInput {
+  name?: string
+  description?: string
+  provider?: string
+  base_model_id?: string
+  model_type?: string
+  status?: string
+  config?: Record<string, any>
+  metadata?: Record<string, any>
+}
+
+export interface FilterableAiModelProps {
+  id?: string | string[]
+  name?: string | { $contains: string }
+  description?: string | { $contains: string }
+  provider?: string | string[]
+  model_type?: string | string[]
+  status?: string | string[]
+  created_at?: Date | { $gte?: Date; $lte?: Date }
+  updated_at?: Date | { $gte?: Date; $lte?: Date }
+  $or?: any[]
+}
+
+export interface AiModelDTO {
+  id: string
+  name: string
+  description?: string
+  provider: string
+  base_model_id?: string
+  model_type: string
+  status: string
+  config: Record<string, any>
+  metadata?: Record<string, any>
+  created_at: Date
+  updated_at: Date
+  deleted_at?: Date
+}

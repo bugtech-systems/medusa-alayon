@@ -67,9 +67,9 @@ const DeliveryCount = ({ driver }: { driver: DriverDTO }) => {
   return <Text>{loading ? "Loading..." : data?.deliveries.length}</Text>;
 };
 
-export const config = defineRouteConfig({
-  label: "Drivers",
-  icon: BikeIcon,
-});
+// export const config = defineRouteConfig({
+//   label: "Drivers",
+//   icon: BikeIcon,
+// });
 
 export default Drivers;

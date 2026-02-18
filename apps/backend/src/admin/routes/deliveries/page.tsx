@@ -6,7 +6,6 @@ import { useDeliveries } from "../../hooks";
 
 const Deliveries = () => {
   const { data, loading } = useDeliveries();
-console.log(data, 'DATAA')
 
   return (
     <Container className="flex flex-col p-0 overflow-hidden">
@@ -39,9 +38,9 @@ console.log(data, 'DATAA')
   );
 };
 
-export const config = defineRouteConfig({
-  label: "Deliveries",
-  icon: PizzaIcon,
-});
+// export const config = defineRouteConfig({
+//   label: "Deliveries",
+//   icon: PizzaIcon,
+// });
 
 export default Deliveries;

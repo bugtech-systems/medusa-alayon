@@ -63,11 +63,9 @@ export async function streamChatCompletion({
 
 export async function chatCompletion({
   messages,
-  model = "llama3.2:1b"
-}: {
-  messages: { role: string; content: string }[]
-  model?: string
-}) {
+  model = "llama3.2:1b",
+  format = 'json'
+}: any) {
   const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -75,8 +73,56 @@ export async function chatCompletion({
       model,
       messages,
       stream: false,
+      format
     }),
   })
 
   return response.json()
+}
+
+
+export async function generateCompletion({
+  prompt,
+  model = "alayon",
+  format = 'json'
+}: any) {
+
+  console.log({
+  prompt,
+  model,
+  format
+}, 'conff')
+
+  const response = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model,
+      prompt,
+      stream: false,
+      format
+    }),
+  });
+  
+  
+
+  const ollamaResponse = await response.json();
+
+  // 🟢 Parse the model's JSON string into an object
+  try {
+    ollamaResponse.response = JSON.parse(ollamaResponse.response);
+  } catch (e) {
+    console.error("Failed to parse model response as JSON:", ollamaResponse.response);
+    // Optionally, you could fall back xto the raw string or throw an error
+  }
+
+
+ console.log({
+  prompt,
+  model,
+  format,
+  ollamaResponse,
+  response
+}, 'ai result')
+  return ollamaResponse;
 }

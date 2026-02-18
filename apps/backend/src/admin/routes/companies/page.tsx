@@ -92,6 +92,7 @@ const Companies = () => {
 export const config = defineRouteConfig({
   label: "Companies",
   icon: BuildingStorefront,
+  rank: 1
 });
 
 export default Companies;

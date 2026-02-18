@@ -6,7 +6,7 @@ import {
   AiConversationMessage,
   AiToolExecution,
 } from "./models"
-import { chatCompletion, generateEmbedding, streamChatCompletion } from "./utils/ollama"
+import { chatCompletion, generateEmbedding, streamChatCompletion } from "../../utils/ollama"
 
 class AiModuleService extends MedusaService({
   AiModel,

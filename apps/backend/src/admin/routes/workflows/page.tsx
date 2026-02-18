@@ -21,7 +21,6 @@ function AiMemoryAdminPage() {
   }, [])
 
 
-console.log(memories, 'memoo')
 
   return (
     <div className="p-4">
@@ -54,9 +53,9 @@ console.log(memories, 'memoo')
 
 
 
-export const config = defineRouteConfig({
-  label: "Ai-Memory",
-  icon: PizzaIcon,
-});
+// export const config = defineRouteConfig({
+//   label: "Workflows",
+//   icon: PizzaIcon,
+// });
 
 export default AiMemoryAdminPage;

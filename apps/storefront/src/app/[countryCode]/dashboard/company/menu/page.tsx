@@ -37,7 +37,6 @@ export default async function MenuPage() {
   });
   
   
-  console.log(user, company, 'DATAA', categories, categoryProductMap)
 
   return (
     <div className="flex flex-col gap-10">
